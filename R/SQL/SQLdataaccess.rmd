@@ -1,0 +1,27 @@
+---
+title: "Data entry for Access and SQL"
+output: word_document
+---
+
+As programs and projects increase in size, central databases are often an appropriate solution. They ensure data integrity and a lifespan beyond the individual project and employee. They do require some additional work to pull the data into R, but this is made easier by using Open Database Connectivity (ODBC). The RODBC package needs to be installed to allow this functionality. It can be used for Access, SQL, Dbase files, and also Excel (with sufficient care).
+
+Because databases and files can be on different servers or computers, it is convenient to have a small file that can provide that information. In Windows, the data source name is a text file that is produced by a utility found at Windows/system32/odbcad32.exe. Or it can be typed into Notepad and saved into my documents as discountasp.dsn:
+
+[ODBC]  
+DRIVER=SQL Server  
+WSID=KESTRAL  
+APP=Microsoft® Windows® Operating System  
+SERVER=sql2k801.discountasp.net
+
+
+```{r}
+library(RODBC)
+library(tidyr)
+library(dplyr)
+channel <- odbcConnect("discountasp", uid = "SQL2008_508574_uwmep_user", pwd = "Manis9") #this creates a connection to the database and reads the server from discountasp.dsn, and provides user credentials.
+sm <-sqlFetch(channel, "Mammals")  # read data from SQL database
+glimpse(sm)
+```
+
+
+Note that `echo = FALSE` parameter can be added to the code chunk to prevent printing of the R code that generated the data {r, echo = FALSE}.

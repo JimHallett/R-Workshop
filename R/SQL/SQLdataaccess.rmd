@@ -10,7 +10,7 @@ Because databases and files can be on different servers or computers, it is conv
 [ODBC]  
 DRIVER=SQL Server  
 WSID=KESTRAL  
-APP=Microsoft? Windows? Operating System  
+APP=Microsoft Windows Operating System  
 SERVER=sql2k801.discountasp.net
 
 
@@ -26,4 +26,3 @@ glimpse(sm)
 
 Note that `echo = FALSE` parameter can be added to the code chunk to prevent printing of the R code that generated the data {r, echo = FALSE}.
 
-This is especially important for Lauren.

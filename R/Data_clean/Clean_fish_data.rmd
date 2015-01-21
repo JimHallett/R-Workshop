@@ -1,0 +1,39 @@
+---
+plottitle: "Initial data clean-up: fisheries data"
+output: word_document
+---
+
+Some initial summarization and plotting of data can often reveal errors. In this example, we continue with some of the WDFW fisheries data for 2014. 
+
+```{r}
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+df <- read.csv("D:/fishdata.csv", header = TRUE, sep = ",")
+```
+
+Initially, we create an xy plot of Weight x Length for the entire dataset and including all species. 
+
+
+```{r, echo=TRUE}
+qplot(Length_meas, Weight_meas, data = df)
+```
+
+It's clear that there are some outliers at the lengths <200. So we'll filter the data and replot for these smaller lengths. 
+
+```{r, echo=TRUE}
+df200 <- df %>%
+  filter(Length_meas < 200)
+qplot(Length_meas, Weight_meas, data = df200)
+```
+
+This chart makes it clear that there are 3 unusual observations. Often these are due to clerical errors (e.g., decimal in the wrong place). 
+
+We can again filter the dataset to extract the outlying observations.
+
+```{r, echo=TRUE}
+dfoutliers <- df %>%
+  filter(Length_meas < 200) %>%
+  filter(Weight_meas > 250)
+dfoutliers
+```

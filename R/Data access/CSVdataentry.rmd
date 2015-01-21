@@ -1,0 +1,17 @@
+---
+title: "Data entry - Excel"
+output: word_document
+---
+
+Many people use Excel, but unfortunately it is not the best mechanism for storing data long term. It  poses some issues for getting the data into R for analysis (i.e., multiple sheets). The best method is to save each datasheet as a csv (comma-separated values) file. Then to input the data use:
+
+read.csv("directory and filename", header = TRUE, sep = ",")
+
+The header should include the variable names. The separator (sep) is normally a comma. 
+
+```{r}
+df <- read.csv("D:/fishdata.csv", header = TRUE, sep = ",")  #Enter the data
+summary(df)   #Produce a short summary of the data
+```
+
+These data will be used for a number of subsequent explorations.

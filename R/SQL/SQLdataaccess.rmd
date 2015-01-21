@@ -1,6 +1,6 @@
 ---
 title: "Data entry for Access and SQL"
-output: word_document
+output: pdf_document
 ---
 
 As programs and projects increase in size, central databases are often an appropriate solution. They ensure data integrity and a lifespan beyond the individual project and employee. They do require some additional work to pull the data into R, but this is made easier by using Open Database Connectivity (ODBC). The RODBC package needs to be installed to allow this functionality. It can be used for Access, SQL, Dbase files, and also Excel (with sufficient care).
@@ -10,7 +10,7 @@ Because databases and files can be on different servers or computers, it is conv
 [ODBC]  
 DRIVER=SQL Server  
 WSID=KESTRAL  
-APP=Microsoft® Windows® Operating System  
+APP=Microsoft? Windows? Operating System  
 SERVER=sql2k801.discountasp.net
 
 

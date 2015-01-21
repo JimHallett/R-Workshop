@@ -14,4 +14,4 @@ df <- read.csv("D:/fishdata.csv", header = TRUE, sep = ",")  #Enter the data
 summary(df)   #Produce a short summary of the data
 ```
 
-These data will be used for a number of subsequent explorations.
+These data will be used for a number of subsequent explorations.  

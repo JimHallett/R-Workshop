@@ -37,3 +37,15 @@ dfoutliers <- df %>%
   filter(Weight_meas > 250)
 dfoutliers
 ```
+
+The outlying points can either be corrected or removed from the dataset as appropriate.There may be additional outliers in the data for measurements >200, but this won't be clear until the data are separated by species.
+
+```{r, echo=TRUE}
+library(lattice)
+species.f <- factor(df$Species_code)
+xyplot(df$Weight_meas~df$Length_meas|species.f)
+```
+
+
+
+

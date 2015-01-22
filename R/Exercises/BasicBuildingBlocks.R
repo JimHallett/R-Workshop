@@ -21,7 +21,6 @@
  
 ## Like any good interactive calculator, 
 ## R follows the standard mathematical order of operations. 
-
 ## Type:
 3+2/8
 
@@ -51,6 +50,9 @@ Sum(2, 3)
 # lower case from UPPER case. The function 'sum' is not the same 
 # as 'Sum', and in this case 'Sum' does not exist.
 
+## In addition to the common arithmetic operators +, -, / and ^, other useful operators are
+## mean() for the mean, sqrt() to take the square root, and abs() for the absolute value
+
 
 ################################################
 ##3) Results can be stored and reused as objects.
@@ -62,11 +64,9 @@ x <- sum(2,3)
 
 ## This can be read as "x gets 2 plus 3". Notice that R did not print the result 5 this time.
 ## To view the contents of the variable x, jut type x and press Enter:
-
 x
 
 ## Now store the results of x/8 in a new variable y:
-
 y<- x/8
 
 ##QUESTION: What is the value of y?
@@ -85,147 +85,98 @@ z<- c(1.1, 9, 3.14)
 z
 
 ## QUESTION: What do you notice about z?
-## TASK: How long is z? Use the function 'length' to confirm the length of this vector.
+## TASK: How long is z? Use the function length() to confirm the length of this vector.
+
+## You can combine vectors to make a new vector. 
+## Create a new vector that contains z, 555,then z again in that order:
+c(z, 555, z)
+
+## Numeric vectors can be used in arthimetic expressions. 
+## Type:
+z *2 +100
+
+## Create a new vector my_sqrt:
+my_sqrt<-sqrt(z-1)
+
+## QUESTION: Before you look at it, what do you think my_sqrt contains?
 
 
+###################################################
+##5) Vectors can be created as sequences of numbers.
+###################################################
 
+## The simplest way to create a sequence is by using the ':' operator.
+## Type:
+1:20
 
-c("Inga", "punctata")
-# Concatenates the characters "Inga" and "punctata" forming a vector of length 2.
+## QUESTION: What happens if we instead type 20:1?
 
-## TASK: Use the function length to confirm the length of this vector
+## The seq() function gives us more control over the sequence
+## Type:
+seq(1,20)
 
-paste("Inga", "punctata")
-# Pastes the characters "Inga" and "punctata" to form a single character string 
-# (length = 1) by joining them.
+## This gives the same output as 1:20. But let's say we want the numbers to range from
+## 0 to 10 but at 0.5 increments. Try it out:
+seq(0,10, by=.5)
 
-## TASK: Use the function length to confirm the length of this vector
+## Or maybe we don't care about the increment, we just want 30 numbers between 5 and 10.
+## Try it out:
+my_seq<-seq(5,10, length=30)
 
+## QUESTION: What is my_seq?
+## TASK: Confirm that my_seq has length 30.
+
+## Maybe we want to create a vector that contains 40 0s. 
+## Type:
+rep(0, times=40)
+
+## Or maybe we want to create a vector that contains 10 repetitions of the vector (0,1,2)
+## Type: 
+rep(c(0,1,2), times=10)
+
+## Finally, let's imagine that instead of repeating the vector (0,1,2) over and over,
+## we want 10 zeros, then 10 ones, then 10 twos. We can do this with the each argument.
+## Try it out:
+rep(c(0,1,2), each=10)
+
+##TASK: Can you generate the same vector by integrating the seq() and rep() functions?
+
+#################################################
+##6) Values can be characters as well as numbers.
+#################################################
+
+## What's your favorite species?
+## Mine is Lasthenia californica (California goldfields!)
+## To make sure we remember that, let's make a vector called "laurens_favorite":
+laurens_favorite<-c("Lasthenia", "calfornica")
+
+## View that vector. But typing laurens_favorite takes a looong time. 
+## To save time, type l then press tab. What happens?
+
+## TASK: Use the function length to confirm the length of this vector.
+
+## What if I want genus and species to be grouped for a vector of length one?
+## Type:
+laurens_favorite2<-paste("Lasthenia", "californica")
+
+## TASK: Use the function length to confirm the length of this vector.
 ## TASK: Use the function 'paste' to join together the genus and species of your 
-## favorite species. Then, use the function 'paste; to paste together, in this 
-## order, the species and genus and family of your favorite species. 
+## favorite species. 
+## TASK: Concatenate c() your favorite species and mine (laurens_favorite2) 
+## in a vector called our_favorites.
 
+##################################
+##7) Getting help as we go along.
+#################################
 
+## The arguments to each function are alway documented. 
+## Let's look up the possible arguments for the paste function.
+##Type: 
 ?paste
-# Opens the help for the function 'paste'.
 
 ## TASK: Using the help for this function, identify what is the role of the 
 ## argument 'sep'.
 ## TASK: Does this argument have a predetermined value? What is that value?
 ## TASK: Use 'paste' to join together the genus and species names of your 
 ## favorite species using the character '_' to separate the two words.
-
-
-?rep
-# Opens the help for the function rep.
-
-## TAKS: Read the help for this function, and identify its main arguments.
-## TASK: Run lines 1 to 9 of the examples in the help page. What is this 
-## piece of code doing?
-
-
-rep(x=c("Pouroma", "minor"), times=7)
-rep(x=c("Pouroma", "minor"), each=7)
-# Uses the function rep to repeat the information in the argument x. 
-
-## TASK: How and why are the results of the two lines above different?
-## TASK: Create a vector that contains “R is awesome!” 1000 times. If you want, 
-## use the function 'rep' to help you complete this task quickly.
-## TASK: Rewrite the code above in 3 different ways: 
-##  1. using the names of the arguments in their predetermined order 
-##  2. excluding the names of the arguments 
-##  3. changing the order of the arguments 
-
-## TASK: What is (are) the problem(s) with the following line of code? Read the 
-## error and correct the code. 
-Rep(cSocratea exorrhiza), Times=7)
-
-
-rnorm(n=50)
-# Generates a vector that contains 50 random values from a normal distribution.
-
-
-rnorm(50)
-# Also generates a vector that contain 50 random values from a normal distribution. 
-
-## TASK: According to the help of the function 'rnorm': 
-##  1. What other arguments belong to this function?
-##  2. What are the predetermined values for these additional arguments?
-## TASK: Generate a vector of length 25 with random values from a normal 
-## distribution with mean 50 and standard deviation 20. 
-
-
-plot(x=rnorm(50), y=rnorm(50))
-# The function plot is used to make many types of figures. In this case, it is 
-# used to make  a scatterplot. In the figure, two random variables are plotted 
-# against each other. 
-
-
-A <- rnorm(n=1000, mean=0, sd=1)
-B <- rnorm(1000, sd=25, mean=100)
-# This creates two vectors with random values taken from a normal distribution 
-# and saves then in two objects named A and B. Note the order in the arguments 
-# between the two calls to the function rnorm. 
-
-
-hist(A, col="lightblue")
-# Creates a histogram of values in the vector A. 
-
-## TASK: Using the help in R, create a histogram of the values in vector B where 
-##  1. data is presented in 30 bars,
-##  2. bars are red, and 
-##  3. the X axis has the name 'Values of random vector B'. 
-
-
-## TASK: Before running the following code, can you predict how the output of 
-## the next three commands will be different?
-plot(A,  B)
-plot(y=A,  x=B)
-plot(x=B, y=A)
-
-A <- 1:20 
-# Re-rewrites object A, not with the sequence: 1, 2, 3,..., 20.
-
-## TASK: Create another object of name 'a' with the same sequence, but use the 
-## function 'seq'.
-
-## TASK: Create a figure where you relate the values of 'A' with the values of 
-## vector 'a' – meaning create a scatterplot. 
-
-## TASK: Use the function 'lines' to create line of 1:1 correspondence on top of 
-## the scatterplot (origin at 0,0 coordenates and end at 20,20 coords). To 
-## create this line, the function will need the X and Y coordinates for a point 
-## of departure and a point of arrival. 
-
-
-## TASK: Can you read and understand the code that follows?
-pred <- rnorm(250, 40, 10)
-resp <- 15 + 1.55*pred + rnorm(250, sd=5, mean=0)
-plot(pred, resp, cex=2, pch=21, col= "grey60", bg="gold")
-
-## TASK: Make a figure similar to the one above, but change (1) the size of the 
-## symbols, (2) the type of symbol, and (3) the color of the symbol. 
-
-## TASK: If you calculated the average and standard deviation of the values in 
-## vector pred, what would you expect? Calculate them using the functions mean 
-## and sd and confirm/revise your expectations. 
-
-
-lm(resp ~ pred)
-## The function lm creates linear models. In this case, 'lm' is making a linear 
-## OLS regression where  resp is a function of the variable pred. The symbol '~' 
-## generally means "is a function of" and is used in formulas. 
-
-
-summary(object=lm(resp ~ pred))
-# The function 'summary' creates, obviously, a summary of the information 
-# contained in its 'object' argument. In this case, it provides information for 
-# the linear regression between resp and pred. 
-
-## TASK: Make a summary of a vector of 300 random values taken from a normal 
-## distribution with a mean of -13 and a standard deviation of 5. 
-
-
-
-
 

@@ -4,11 +4,13 @@ output: html_document
 ---
 <br> 
 
-##What is R and what are its virtues?
+#MODULE 1: Introduction to R
+
+##1) What is R and what are its virtues?
 **[Fill this in]**
 
 
-##Basic building blocks of R
+##2) Basic building blocks of R
 ###Presentation 1: Functions, arguments and getting help
 **Writing R is like writing in English**
 
@@ -38,4 +40,114 @@ output: html_document
 6) Values can be characters as well as numbers.
 7) Getting help as we go along.
 
-##Basic building blocks of R
+##3) Looking at data
+
+###Presentation 2: Objects
+
+* Objects are used to hold data
+* Creating objects with '<-', '=' and 'assign'
+* Special values
+    + NA: missing value
+    + Inf and -Inf: Infinit
+    + NAN: Not a number
+    + NULL: Object missing
+* There are many different classes of objects, each with its own properties
+* vectors: numeric, character, logical
+* Other objects based on the vector, but differ in dimensions and data type
+```{r, echo=FALSE, message=FALSE}
+library(knitr)
+r1<-c("1d", "Atomic vector", "List")
+r2<-c("2d", "Matrix", "Dataframe")
+r3<-c("nd", "Array", "")
+datstruct<-rbind( r1, r2, r3)
+row.names(datstruct)<-NULL
+colnames(datstruct)<-c("Dimensions", "Homogeneous", "Hetergeneous")
+kable(datstruct)
+```
+* Go into detail on each data type?
+
+###Exercise 2: Looking at data
+1) Creating matrices and dataframes.
+2) Reading in data: txt and csv.
+3) Looking at data:
++ (ls)
++ class()
++ dim()
++ ncol()
++ names()
++ head()
++ summary()
++ str()
+4) Missing values.
+5) Subsetting vectors, matrics and dataframes.
+
+<br> 
+
+#MODULE 2: R for analysis and graphing
+##Presentation 3: Stats and graphing
+###Exercise 3: Simple statistics
+**[Show basic analyses with data are that are subset/formatted correct]**
+
+###Excercise 4: Graphing with ggplot2
+**[Show basic graphs with data that are subset/formatted correct]**
+
+**[Relate each graphing type to the type of analysis, ie ANOVA vs regression]**
+
+##Presentation 4: Workflows
+###Excercise 5:  dplyr
+ - The pipeline
+ 
+ - **filter:** keep rows that match a criteria
+
+- **select**: pick columns by name
+
+- **arrange:** reorder rows
+
+- **mutate:** add new variables
+
+- **summarize:** reduce variables to values
+
+- **+ group_by**
+
+<br>
+
+#MODULE 3: R for data cleaning and storage
+##Presentation 4: tidy data 
+**Data that are easy to transform, visualize and model**
+
+**Key idea: Store variables in a consistent way:**
+
+- Each variable forms a column
+- Each observation forms a row
+- Each type of observational unit forms a table
+
+**The five most common problems with messy data:**
+
+- Multiple types of observational units are stored in the same table
+- Column headers are values, not variable names
+- Multiple variables are stored in one column
+- Variables are stored in both rows and columns
+- A single observational unit is stored in multiple tables
+
+###Exercise 5: tidyr
+- **Gather:** convert many columns into variable/value pairs; akin to melt in reshape
+
+- **Spread:** convert variable/value pairs into columns; akin to cast in reshape
+
+- **Separate:** break one column into two (similar to strsplit)
+
+###Exercise 6: Linking R with data storage
+- Excel vs csv
+- SQL
+
+<br>
+
+#MODULE 4: Putting it all together: R for better monitoring and reporting
+**[markdown etc]**
+
+
+
+
+
+
+

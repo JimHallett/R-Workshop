@@ -1,0 +1,255 @@
+---
+title: "Tidying and using data"
+output:
+  ioslides_presentation:
+    highlight: tango
+    incremental: yes
+  beamer_presentation: null
+---
+
+##What is a workflow?
+*A series of steps necessary to complete a task*
+
+For example, I hate flight delays! I want to avoid days and times that have a lot of delays.
+
+To minimize my risk of flight delays, I should take a large dataset of flights, 
+
+then select those flights that had delays,
+
+then group those flights by date and hour, 
+
+then summarize by mean flight delay,
+
+then select those times with delays over 2 hours
+
+*Then avoid traveling on those days and times!*
+
+##dplyr allows me to do just that with the "pipeline"
+
+x %>% f(y) -> f(x, y)
+
+hourly_delay <- flightdata %>%
+  filter(!is.na(dep_delay)) %>%
+  group_by(date, hour) %>%
+  summarise(
+    delay = mean(dep_delay),
+n = n() ) %>%
+  filter(n > 2)
+  
+  
+##dplyr
+
+- **filter:** keep rows that match a criteria
+
+- **select**: pick columns by name
+
+- **arrange:** reorder rows
+
+- **mutate:** add new variables
+
+- **summarize:** reduce variables to values
+
+- **+ group_by**
+
+
+##What are tidy data?
+
+Data that are easy to transform, visualize and model
+
+Key idea: Store variables in a consistent way:
+
+- Each variable forms a column
+- Each observation forms a row
+- Each type of observational unit forms a table
+
+##tidyr: 
+
+- **Gather:** convert many columns into variable/value pairs; akin to melt in reshape
+
+- **Spread:** convert variable/value pairs into columns; akin to cast in reshape
+
+- **Separate:** break one column into two (similar to strsplit)
+
+##The five most common problems with messy data:
+
+- Multiple types of observational units are stored in the same table
+- Column headers are values, not variable names
+- Multiple variables are stored in one column
+- Variables are stored in both rows and columns
+- A single observational unit is stored in multiple tables
+
+##Let's develop a workflow to clean some messy data
+First we have to load the packages
+```{r, warning=FALSE, message=F}
+library(dplyr)
+library(tidyr)
+library(knitr)
+```
+
+
+##Let's have a look at that messy data
+```{r}
+rawdat<-read.csv("Niwot_Salix_2014_WillowSeedlingSurvey.csv", fill=T)
+kable(head(rawdat))
+```
+
+##Multiple observational units in the same table
+
+- The meta data in is the table!
+- Includes replication at both the individual level and the plot level
+- Code, snow, n and temp are repeated (or in this case worse - not repeated!)
+
+##Multiple units in same table fix 1: remove the meta data
+
+First we need to assign correct column names
+```{r}
+mycolnames<-t(rawdat[10,])
+colnames(rawdat)<-c(mycolnames)
+```
+
+Then delete the metadata rows
+
+```{r}
+dat<-rawdat[-c(1:10), ]
+```
+
+##What's that look like?
+```{r}
+kable(head(dat))
+```
+
+##Multiple units in same table fix 2: separate the treatment variables into their own table
+```{r}
+#create a vector of equal to plot number repeated 5 times each
+myhack<-rep(1:48, each=5)
+#rbind that with dat
+dat2<-cbind(myhack, dat)
+```
+
+
+##Compile the plot-level data
+```{r}
+#select the treatment variables
+mytrts<-dat2[c("myhack", "block", "plot", "code", "snow", "n", "temp")]
+#subset that to the unique values
+treatment_dat<-subset(mytrts, mytrts$block!="")
+#remove the hack
+treatment_dat$myhack<-NULL
+```
+
+##What's that look like?
+```{r}
+kable(head(treatment_dat))
+```
+
+##Compile the individual-level data
+```{r}
+#select the individual columns
+myindivs<-c(1, 8:21)
+dat3<-dat2[myindivs]
+#rename myhack to plot
+names(dat3)[1]="plot"
+```
+
+##What's that look like?
+```{r}
+kable(head(dat3))
+```
+
+##Column headers are values, not variable names
+Time for tidyr!: **gather** and **spread**
+```{r}
+library(tidyr)
+```
+
+##Gather the willow individuals by plot and variable
+```{r, warning=FALSE}
+dat4<-gather(dat3, individ, value, w_1:w_C)
+kable(head(dat4))
+#unique(dat4$value)
+```
+
+##Then spread by variable and value
+```{r}
+dat5<-spread(dat4, variable, value)
+kable(head(dat5))
+```
+
+##Uh oh, looks like people treated the ht1 as a notes column!!
+What issue is this?
+```{r}
+unique(dat5$ht1)
+```
+
+##Let's fix it
+```{r}
+dat5<-dat5%>%
+  #let's paste the ht1 character values with the notes
+  mutate(notes=ifelse(ht1=="CF", paste(notes, "CF", sep=""), notes), 
+         notes=ifelse(ht1=="dead", paste(notes, "dead", sep=""), notes)) %>%
+  
+  #then remove the character values from ht1
+  mutate(ht1=ifelse((ht1=="CF" | ht1=="dead"), NA, ht1)) %>%
+  
+  #but it still thinks it's a factor! fix it to numeric 
+  mutate(ht1=as.numeric(as.character(ht1)))
+  
+```
+
+##What are the other variables?
+```{r}
+str(dat5)
+```
+
+##We want  cnpy1, cnpy2  and ht2 to be numeric!
+```{r}
+dat5<-dat5%>%
+  mutate(cnpy1=as.numeric(cnpy1), cnpy2=as.numeric(cnpy2), 
+         ht2=as.numeric(ht2))
+str(dat5)
+```
+
+##Turns out that some seedlings were seeded, and others transplanted, marked by numeric vs alphabetical
+What should we do?
+```{r}
+dat5<-dat5%>%
+  mutate(planting=extract_numeric(individ))%>%
+  mutate(planting=ifelse(is.na(planting)==T, "transplant", "seedling"))
+```
+
+##Let's more formally characterize mortality:
+```{r}
+dat5<-dat5%>%
+  mutate(dead=0, dead=ifelse(is.na(ht1)==T, 1, dead))
+```
+
+##And make one dataset just for live/dead
+```{r}
+survival_dat<-dat5%>%
+  select(plot, individ, dead, planting)
+```
+
+##What's that look like?
+```{r}
+kable(head(survival_dat))
+```
+
+
+##Then let's make a second dataset just for growth
+```{r}
+growth_dat<-dat5%>%
+  filter(dead==0)%>%
+  select(plot:ht2, planting)
+```
+
+##What's that look like?
+```{r}
+kable(head(growth_dat))
+```
+
+##Is it tidy yet?!
+
+
+
+
+

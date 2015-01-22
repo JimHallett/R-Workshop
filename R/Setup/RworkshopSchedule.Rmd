@@ -1,0 +1,41 @@
+---
+title: "R-workshop Schedule"
+output: html_document
+---
+<br> 
+
+##What is R and what are its virtues?
+**[Fill this in]**
+
+
+##Basic building blocks of R
+###Presentation 1: Functions, arguments and getting help
+**Writing R is like writing in English**
+
+- Anatomy of an R command
+- Action and modifiers akin to function and arguments
+- Illustrate the role of parentheses, equal sign, and comma
+- Show when to use argument names, and when to just use positions
+- Illustrate functions within functions
+- Saving output as objects 
+
+**Getting help**
+
+- Look at the package and function documentation
+- Search in www.rseek.org or Google
+- QuickR
+- Swirl
+- Ask a friend
+- Ask a stackoverflow or the R-help mailing list. But first make sure you have the latest version of R and relevant packages, and have looked for related problems on the site, and if you've done both of those and no luck, spend some time making a reproducible example!
+- Meta-learning: Look at source code; form a hypothesis about what the code does and test it
+
+###Exercise 1
+1) In it's simplest form, R can be used as an interactive calculator. 
+2) Functions can replace basic algebraic operators.
+3) Results can be stored and reused as objects.
+4) A collection of values can be stored as a vector.
+5) Vectors can be created as sequences of numbers.
+6) Values can be characters as well as numbers.
+7) Getting help as we go along.
+
+##Basic building blocks of R

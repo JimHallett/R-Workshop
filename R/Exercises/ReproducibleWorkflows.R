@@ -16,7 +16,7 @@
 ## for scripted analysis because their formats remain constant but graphs frequently
 ## need to be updated to reflect new data.
 
-rawdat<-read.csv("Calispell Creek and Tributary Temperatures.csv", stringsAsFactors=FALSE)
+rawdat<-read.csv("D:/github/R-Workshop/R/Exercises/Calispell Creek and Tributary Temperatures.csv", stringsAsFactors=FALSE)
 
 ## Oops, we got an error! 
 ## QUESTION: Why?
@@ -57,7 +57,8 @@ mydat<-rawdat[-1,]
 
 #################################
 ## 2) dplyr tool number 1: tbl_df
-#################################
+#################################mydat
+
 
 ## First things first, let's load dplyr:
 library(dplyr)
@@ -69,7 +70,7 @@ packageVersion("dplyr")
 
 ## The first step of working with data in dplyr is to load the data in what the package authors call
 ## a 'data frame tbl' or 'tb_df'
-## Use this code to create a new tbl_df called wtemp:
+## Use this code to create a new tbl_df called wtemrmp:
 
 wtemp<-tbl_df(mydat)
 
@@ -81,6 +82,7 @@ wtemp
 ## QUESTION: What class is wtemp? How many rows does wtemp have? How many columns?
 
 ## To reinforce how nice this is, print mydat instead:
+
 mydat
 
 ## Ophf! To never see that again, let's remove rawdat and mydat from the workspace
@@ -88,8 +90,16 @@ rm(rawdat)
 rm(mydat)
 
 #################################
+
+
+
 ## 3) dplyr tool number 3: select
 #################################
 
-##
+#Where should we put data-typing in? Date from the csv is typed as character and needs to be converted.
+#If not it will sort funny.
+
+wtemp$date <- as.Date(wtemp$date, "%m/%d/%Y")
+
+
 

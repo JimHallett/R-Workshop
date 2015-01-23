@@ -76,8 +76,7 @@ mydat$winchester_temp<-as.numeric(mydat$winchester_temp)
 
 #################################
 ## 2) dplyr tool number 0: tbl_df
-#################################mydat
-
+#################################
 
 ## First things first, let's load dplyr:
 library(dplyr)
@@ -232,8 +231,8 @@ mutate(wtemp, date2=mdy(date))
 ## Finally, we can use mutate to create several columns. For example, let's create date2, then create a column for month and year
 mutate(wtemp, date2=mdy(date), month=month(date2), year=year(date2))
 
-## Let's go ahead and save those changes to the wtemp object:
-wtemp<-mutate(wtemp, date2=mdy(date), month=month(date2), year=year(date2))
+## Let's go ahead and save those changes in an object called wtemp2 object:
+wtemp2<-mutate(wtemp, date2=mdy(date), month=month(date2), year=year(date2))
 
 
 ####################################
@@ -243,11 +242,12 @@ wtemp<-mutate(wtemp, date2=mdy(date), month=month(date2), year=year(date2))
 ## Often we want to look at summarized as opposed to raw data. 
 ## At a basic level, summarize will condense all rows of a variable into one, summarized value.
 ## For example, let's look at the mean water temperature at Calispell
-summarize(wtemp, avg_temp_calispell= mean(calispell_temp, na.rm=TRUE))
+summarize(wtemp2, avg_temp_calispell= mean(calispell_temp, na.rm=TRUE))
 
 ## QUESTION: What did na.rm=TRUE?
 ## QUESTION: Can you use summarize to get the max value for the calispell_temp variable?
 ## QUESTION: Do you think this level of aggregation is very interesting?
+
 
 ###################################
 ## 6) dplyr tool number 6: group_by
@@ -258,7 +258,7 @@ summarize(wtemp, avg_temp_calispell= mean(calispell_temp, na.rm=TRUE))
 ## If we add the group_by function, summarize will give us the requested value FOR EACH GROUP.
 
 ## First, let's create a new dataframe table that is equal to to wtemp but includes two grouping variables: month and year
-wtemp_by_monthyear<-group_by(wtemp, month, year)
+wtemp_by_monthyear<-group_by(wtemp2, month, year)
 ## QUESTION: Print wtemp and wtemp_by_month. Can you see how they differ?
 
 ## Use summarize again, but this time on wtemp_by_month.
@@ -277,12 +277,54 @@ wtemp_calispell_summary<- summarize(wtemp_by_monthyear, avg_temp_calispell= mean
 
 ## Notice how this gets our data into great shape for plotting. Just for fun, let's plot mean temp by month and include se
 library(ggplot2)
-limits<-aes(ymax=avg_temp_calispell+se_temp_calispell, ymin=avg_temp_calispell-se_temp_calispell)
-ggplot(wtemp_calispell_summary, aes(x=month, y=avg_temp_calispell)) +geom_bar(stat="identity", fill="grey") + geom_errorbar(limits, width=.1) + 
-  theme_bw() + xlab("Month") + ylab("Mean temperature at Calispell Creek C") + facet_wrap(~year) 
+ggplot(wtemp_calispell_summary, aes(x=month, y=avg_temp_calispell)) +geom_bar(stat="identity", fill="grey") + 
+  geom_errorbar(aes(ymax=avg_temp_calispell+se_temp_calispell, ymin=avg_temp_calispell-se_temp_calispell), width=.1) + 
+  theme_bw() + xlab("Month") + ylab("Mean temperature at Calispell Creek (degrees C)") + facet_wrap(~year) 
+
 
 ## One last note on group_by: If you group a dataframe table and then create a new variable with mutate, the value for that variable 
 ## will be repeated for each member of the group. For example:
 mutate(wtemp_by_monthyear, avg_temp_calispell=mean(calispell_temp, na.rm=TRUE))
 
 ## QUESTION: Can you think of a scenario in which this is what would want to do?
+
+
+#############################################
+## 7) dplyr tool number 7: %>% (the pipeline)
+#############################################
+
+## It took us a lot of steps to get from the raw data to that graph!
+## We had to: 
+## 0) turn the dataframe into a dataframe table
+## 1) select the date, time and Calispell temperature variable
+## 2) filter out the missing values from the temperature variable
+## 3) arrange by temperature (well, we didn't haaave to, but it was nice)
+## 4) mutate a whole lot! we created the date2 column (a date-time object) and used it to create a month and a year column
+## 5) group_by month and year
+## 6) summarize temperature by mean and se
+## 7) THEN graph
+
+## This is a "workflow" - and dplyr has a handy tool to make this process clear and easy.
+## It is called the "pipeline". Everytime a function is followed by the %>%,  it indicates that more work will be done on the object.
+## To illustrate, here is the pipeline to create a graphical object stored as "Calispell_monthlytemp" from the initial wtemp dataframe 
+
+Calispell_monthtemp <-wtemp %>%
+  tbl_df()%>%=
+  select(date, time, calispell_temp) %>%
+  filter(!is.na(calispell_temp)) %>%
+  arrange(calispell_temp) %>%  
+  mutate(date2=mdy(date), month=month(date2), year=year(date2)) %>%
+  group_by(month, year) %>%
+  summarize(avg_temp_calispell= mean(calispell_temp),  
+            se_temp_calispell= calcSE(calispell_temp)) %>%
+  ggplot(aes(x=month, y=avg_temp_calispell)) +geom_bar(stat="identity", fill="grey") + 
+    geom_errorbar(aes(ymax=avg_temp_calispell+se_temp_calispell, ymin=avg_temp_calispell-se_temp_calispell), width=.1) + 
+    theme_bw() + xlab("Month") + ylab("Mean temperature at Calispell Creek (degrees C)") + facet_wrap(~year) 
+
+##  Nice!! Let's look at what we created:
+Calispell_monthtemp
+
+## QUESTION: Where is (are) the dataset specified in the pipeline?
+
+## For the next module we will continue to work with this pipeline structure to get lots of practice with it!
+

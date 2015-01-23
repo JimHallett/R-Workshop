@@ -55,6 +55,12 @@ names(rawdat)[1]<-"date"
 ## I'll do this by creating a new dataframe called mydat that is rawdat without the first row:
 mydat<-rawdat[-1,]
 
+## One last bit of housekeeping we have to do because of the odd column names.
+## Check the current structure of mydat
+str(mydat)
+
+## QUESTION: Why are all the columns character vectors?
+
 #################################
 ## 2) dplyr tool number 1: tbl_df
 #################################
@@ -65,10 +71,10 @@ library(dplyr)
 ## It's important that you have dplyr version 0.2 or later. To confirm, type:
 packageVersion("dplyr")
 
-## If your dplyr version is not at least 0.2, raise your hand or click on the packages tab to reinstall dplyr
+## If your dplyr version is not at least 0.2, raise your hand or click on the packages tab to reinstall dplyr.
 
 ## The first step of working with data in dplyr is to load the data in what the package authors call
-## a 'data frame tbl' or 'tb_df'
+## a 'data frame tbl' or 'tb_df'.
 ## Use this code to create a new tbl_df called wtemp:
 
 wtemp<-tbl_df(mydat)
@@ -88,8 +94,37 @@ rm(rawdat)
 rm(mydat)
 
 #################################
-## 3) dplyr tool number 3: select
+## 3) dplyr tool number 2: select
 #################################
 
-##
+## Later we will 'tidy' this dataset to include a 'site' variable and 'temperature' variable
+## But for now, let's imagine that we are only intested in the temperature at the Calispell site
+## select helps us to reduce the dataframe to just columns of interesting
+
+select(wtemp, calispell_temp, date, time)
+
+## QUESTION: Are the columns in the same order as wtemp?
+## NOTE: We didn't have to type wtemp$date etc as we normally would; 
+## the select() function knows we are referring to wtemp
+
+## Remember that in R, the : operator is a compact way to create a sequence of numbers? For example:
+5:20
+
+## Normally this notation is just for numbers, but select() allows you to specify a sequence of columns this way.
+## This can save a bunch of typing! 
+
+## TASK: Select date, time and calispell_temp using this notation
+
+## Print the entire dataframe again, to remember what it looks like.
+## We can also specify the columns that we want to discard. Let's remove smalle_temp, winchester_temp that way:
+
+select(wtemp, -smalle_temp, -winchester_temp)
+
+## TASK: Get that result  a third way, by removing all columns from smalle_temp:winchester_temp.
+## Be careful! select(wtemp, -smalle_temp:winchester_temp) doesn't do it...
+
+
+#################################
+## 3) dplyr tool number 3: filter
+#################################
 

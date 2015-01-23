@@ -94,7 +94,7 @@ kable(datstruct)
 **[Relate each graphing type to the type of analysis, ie ANOVA vs regression]**
 
 ##Presentation 4: Workflows
-###Excercise 5:  dplyr
+###Exercise 5:  dplyr
  - The pipeline
  
  - **filter:** keep rows that match a criteria

@@ -61,6 +61,19 @@ str(mydat)
 
 ## QUESTION: Why are all the columns character vectors?
 
+## Here is one way to change the temperature columns to numeric. 
+## Helpful note: This works because they are character values;
+## if R the columns were factors we would have to convert them to character vectors 
+## before converting to numeric (otherwise it would give numeric assignments to each factor level)
+mydat$calispell_temp<-as.numeric(mydat$calispell_temp)
+mydat$smalle_temp<-as.numeric(mydat$smalle_temp)
+mydat$winchester_temp<-as.numeric(mydat$winchester_temp)
+
+
+## QUESTION: How would we convert a factor to a character?
+## QUESTION: What are two ways to verify that the temperature columns are numeric?
+
+
 #################################
 ## 2) dplyr tool number 1: tbl_df
 #################################mydat
@@ -77,19 +90,15 @@ packageVersion("dplyr")
 ## The first step of working with data in dplyr is to load the data in what the package authors call
 ## a 'data frame tbl' or 'tb_df'.
 ## Use this code to create a new tbl_df called wtemp:
-
-
 wtemp<-tbl_df(mydat)
 
 ## From ?tbl_df:  “The main advantage to using a tbl_df over a regular data frame is the printing.” 
 ## Let’s see what is meant by this. 
-
 wtemp
 
 ## QUESTION: What class is wtemp? How many rows does wtemp have? How many columns?
 
 ## To reinforce how nice this is, print mydat instead:
-
 mydat
 
 ## Ophf! To never see that again, let's remove rawdat and mydat from the workspace
@@ -103,7 +112,6 @@ rm(mydat)
 ## Later we will 'tidy' this dataset to include a 'site' variable and 'temperature' variable
 ## But for now, let's imagine that we are only intested in the temperature at the Calispell site
 ## select helps us to reduce the dataframe to just columns of interesting
-
 select(wtemp, calispell_temp, date, time)
 
 ## QUESTION: Are the columns in the same order as wtemp?
@@ -120,7 +128,6 @@ select(wtemp, calispell_temp, date, time)
 
 ## Print the entire dataframe again, to remember what it looks like.
 ## We can also specify the columns that we want to discard. Let's remove smalle_temp, winchester_temp that way:
-
 select(wtemp, -smalle_temp, -winchester_temp)
 
 ## TASK: Get that result  a third way, by removing all columns from smalle_temp:winchester_temp.
@@ -131,5 +138,61 @@ select(wtemp, -smalle_temp, -winchester_temp)
 ## 3) dplyr tool number 3: filter
 #################################
 
+#Now that you know how to select a subset of columns using select(), 
+#a natural next question is “How do I select a subset of rows?” 
+#That’s where the filter() function comes in.
+
+## I might be worried about high water temperatures. 
+## Let's filter the the dataframe table to only include data with temperature equal or greater than 15 C
+
+filter(wtemp, calispell_temp>=15)
+
+## QUESTION: How many rows match this condition?
+
+## We can also filter based on multiple conditions. 
+## For example, did the water get hot (=>15) on the 4th of July, 2013? I want both conditions to be true:
+filter(wtemp, calispell_temp>=15, date == "7/4/13")
+
+##And I can filter based on "or" - if any condition is true. 
+## For example, was water temp >=15 at any site?
+filter(wtemp, calispell_temp>=15 | smalle_temp>=15 | winchester_temp>=15)
+
+##QUESTION: How many rows match this condition?
+
+## Finally, we might want to only get the row which do not have missing data. R represents missing values with NA
+## We can detect missing values with the is.na() function.
+## Try it out:
+is.na(c(3,5, NA, 6))
+
+## Now put an exclamation point (!) before is.na() to change all of the TRUEs to FALSEs and FALSEs to TRUEs
+## This tells us what is NOT NA:
+!is.na(c(3,5, NA, 6))
+
+## TASK: Time to put this all together. Please filter all of the rows of wtemp 
+## For which the value of calispell_temp is not NA.
+## How many rows match this condition?
 
 
+##################################
+## 4) dplyr tool number 3: arrange
+##################################
+
+## Sometimes we want order the rows of a dataset according to the values of a particular variable
+## For example, let's order the dataframe by calispell_temp 
+
+arrange(wtemp, calispell_temp)
+
+## QUESTION: What is the lowest temperature observed in Calispell Creek?
+
+## But wait! We're more worried about high temperatures.
+## To do the same, but in descending order, you have two options. 
+arrange(wtemp, -calispell_temp)
+arrange(wtemp, desc(calispell_temp))
+
+## And you can arrange by mutiple variables. 
+## TASK: arrange the dataframe by date then desc(smalle_temp)
+
+
+##################################
+## 5) dplyr tool number 4: mutate
+##################################

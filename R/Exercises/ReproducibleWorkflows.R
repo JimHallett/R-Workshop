@@ -4,7 +4,7 @@
 ################################################################################
 
 ## OBJECTIVES:
-## To learn now to wrangle raw data into a form useable for analysis and graphs.
+## To learn how to wrangle raw data into a form useable for analysis and graphs.
 ## To do this in a way that each step is traceable and reproducible.
 ## To this end we'll be using the dplyr package.
 

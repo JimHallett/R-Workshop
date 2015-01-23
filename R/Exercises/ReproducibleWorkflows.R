@@ -75,7 +75,7 @@ mydat$winchester_temp<-as.numeric(mydat$winchester_temp)
 
 
 #################################
-## 2) dplyr tool number 1: tbl_df
+## 2) dplyr tool number 0: tbl_df
 #################################mydat
 
 
@@ -106,7 +106,7 @@ rm(rawdat)
 rm(mydat)
 
 #################################
-## 3) dplyr tool number 2: select
+## 3) dplyr tool number 1: select
 #################################
 
 ## Later we will 'tidy' this dataset to include a 'site' variable and 'temperature' variable
@@ -135,7 +135,7 @@ select(wtemp, -smalle_temp, -winchester_temp)
 
 
 #################################
-## 3) dplyr tool number 3: filter
+## 3) dplyr tool number 2: filter
 #################################
 
 #Now that you know how to select a subset of columns using select(), 
@@ -196,6 +196,7 @@ arrange(wtemp, desc(calispell_temp))
 ##################################
 ## 5) dplyr tool number 4: mutate
 ##################################
+
 ## It’s common to create a new variable based on the value of one or more variables already in a dataset. 
 ## The mutate() function does exactly this.
 
@@ -231,6 +232,57 @@ mutate(wtemp, date2=mdy(date))
 ## Finally, we can use mutate to create several columns. For example, let's create date2, then create a column for month and year
 mutate(wtemp, date2=mdy(date), month=month(date2), year=year(date2))
 
+## Let's go ahead and save those changes to the wtemp object:
+wtemp<-mutate(wtemp, date2=mdy(date), month=month(date2), year=year(date2))
 
 
+####################################
+## 6) dplyr tool number 5: summarize
+####################################
 
+## Often we want to look at summarized as opposed to raw data. 
+## At a basic level, summarize will condense all rows of a variable into one, summarized value.
+## For example, let's look at the mean water temperature at Calispell
+summarize(wtemp, avg_temp_calispell= mean(calispell_temp, na.rm=TRUE))
+
+## QUESTION: What did na.rm=TRUE?
+## QUESTION: Can you use summarize to get the max value for the calispell_temp variable?
+## QUESTION: Do you think this level of aggregation is very interesting?
+
+###################################
+## 6) dplyr tool number 6: group_by
+###################################
+
+## That last one was supposed to be a leading question. I don't think mean temperature is that insightful. 
+## I'm more interested in how temperature changes with month or year.
+## If we add the group_by function, summarize will give us the requested value FOR EACH GROUP.
+
+## First, let's create a new dataframe table that is equal to to wtemp but includes two grouping variables: month and year
+wtemp_by_monthyear<-group_by(wtemp, month, year)
+## QUESTION: Print wtemp and wtemp_by_month. Can you see how they differ?
+
+## Use summarize again, but this time on wtemp_by_month.
+summarize(wtemp_by_monthyear, avg_temp_calispell= mean(calispell_temp, na.rm=TRUE))
+
+## Let's take this a step further, and look at the mean and standard error.
+## First, run this code to store a function that calculate SE
+calcSE<-function(x){
+  x<-x[is.na(x)==F]
+  sd(x)/sqrt(length(x))
+}
+
+## Then, let's summarize calispell both by mean and se and store it as a new dataframe:
+wtemp_calispell_summary<- summarize(wtemp_by_monthyear, avg_temp_calispell= mean(calispell_temp, na.rm=TRUE),  
+          se_temp_calispell= calcSE(calispell_temp))
+
+## Notice how this gets our data into great shape for plotting. Just for fun, let's plot mean temp by month and include se
+library(ggplot2)
+limits<-aes(ymax=avg_temp_calispell+se_temp_calispell, ymin=avg_temp_calispell-se_temp_calispell)
+ggplot(wtemp_calispell_summary, aes(x=month, y=avg_temp_calispell)) +geom_bar(stat="identity", fill="grey") + geom_errorbar(limits, width=.1) + 
+  theme_bw() + xlab("Month") + ylab("Mean temperature at Calispell Creek C") + facet_wrap(~year) 
+
+## One last note on group_by: If you group a dataframe table and then create a new variable with mutate, the value for that variable 
+## will be repeated for each member of the group. For example:
+mutate(wtemp_by_monthyear, avg_temp_calispell=mean(calispell_temp, na.rm=TRUE))
+
+## QUESTION: Can you think of a scenario in which this is what would want to do?

@@ -116,9 +116,9 @@ select(wtemp, calispell_temp, date, time)
 
 ## QUESTION: Are the columns in the same order as wtemp?
 ## NOTE: We didn't have to type wtemp$date etc as we normally would; 
-## the select() function knows we are referring to wtemp
+## the select() function knows we are referring to wtemp.
 
-## Remember that in R, the : operator is a compact way to create a sequence of numbers? For example:
+## Recall that in R, the : operator is a compact way to create a sequence of numbers. For example:
 5:20
 
 ## Normally this notation is just for numbers, but select() allows you to specify a sequence of columns this way.
@@ -130,7 +130,7 @@ select(wtemp, calispell_temp, date, time)
 ## We can also specify the columns that we want to discard. Let's remove smalle_temp, winchester_temp that way:
 select(wtemp, -smalle_temp, -winchester_temp)
 
-## TASK: Get that result  a third way, by removing all columns from smalle_temp:winchester_temp.
+## TASK: Get that result a third way, by removing all columns from smalle_temp:winchester_temp.
 ## Be careful! select(wtemp, -smalle_temp:winchester_temp) doesn't do it...
 
 
@@ -144,7 +144,6 @@ select(wtemp, -smalle_temp, -winchester_temp)
 
 ## I might be worried about high water temperatures. 
 ## Let's filter the the dataframe table to only include data with temperature equal or greater than 15 C
-
 filter(wtemp, calispell_temp>=15)
 
 ## QUESTION: How many rows match this condition?
@@ -152,6 +151,8 @@ filter(wtemp, calispell_temp>=15)
 ## We can also filter based on multiple conditions. 
 ## For example, did the water get hot (=>15) on the 4th of July, 2013? I want both conditions to be true:
 filter(wtemp, calispell_temp>=15, date == "7/4/13")
+
+## QUESTION: Why did we need to use double equal signs (ie == vs =)?
 
 ##And I can filter based on "or" - if any condition is true. 
 ## For example, was water temp >=15 at any site?
@@ -179,7 +180,6 @@ is.na(c(3,5, NA, 6))
 
 ## Sometimes we want order the rows of a dataset according to the values of a particular variable
 ## For example, let's order the dataframe by calispell_temp 
-
 arrange(wtemp, calispell_temp)
 
 ## QUESTION: What is the lowest temperature observed in Calispell Creek?
@@ -196,3 +196,41 @@ arrange(wtemp, desc(calispell_temp))
 ##################################
 ## 5) dplyr tool number 4: mutate
 ##################################
+## It’s common to create a new variable based on the value of one or more variables already in a dataset. 
+## The mutate() function does exactly this.
+
+## I like that the data are all in C. But what if we want to talk to a "I'm not a scientist" politician about water temperature?
+## We might want to convert it to F.
+mutate(wtemp, calispell_temp_F = calispell_temp*9/5 + 32)
+
+## To make our data more usable, we also might want to summarize data across time, or by month and year.
+## The lubridate package helps a lot with this! Here is just a taste, but if you deal with dates a lot check out the package.
+## There is also a great swirl tutorial on how to use it, and feel free to ask us to help with your date strings as well.
+## Let's load lubridate:
+library(lubridate)
+
+## TASK: Look at the lubridate help page. What do the functions with 'y' 'm' and 'd' (in various orders) do?  
+?lubridate
+
+## Try it out:
+mdy("1/13/09")
+
+## Once dates are saved as POSIXct date-time objects, we can extract information from them. Try it out.
+## First, let's save the character string as a date-time object:
+mydate<-mdy("1/13/09")
+
+## Then extract the month and day:
+month(mydate)
+day(mydate)
+
+##QUESTION: How would you extract the year from mydate?
+
+## Let's use the mutate and mdy functions to create a variable called date2 that stores the date as a POSIXct date-time object.
+mutate(wtemp, date2=mdy(date))
+
+## Finally, we can use mutate to create several columns. For example, let's create date2, then create a column for month and year
+mutate(wtemp, date2=mdy(date), month=month(date2), year=year(date2))
+
+
+
+

@@ -309,7 +309,7 @@ mutate(wtemp_by_monthyear, avg_temp_calispell=mean(calispell_temp, na.rm=TRUE))
 ## To illustrate, here is the pipeline to create a graphical object stored as "Calispell_monthlytemp" from the initial wtemp dataframe 
 
 Calispell_monthtemp <-wtemp %>%
-  tbl_df()%>%=
+  tbl_df()%>%
   select(date, time, calispell_temp) %>%
   filter(!is.na(calispell_temp)) %>%
   arrange(calispell_temp) %>%  

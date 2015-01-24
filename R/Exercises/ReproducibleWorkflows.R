@@ -73,6 +73,13 @@ mydat$winchester_temp<-as.numeric(mydat$winchester_temp)
 ## QUESTION: How would we convert a factor to a character?
 ## QUESTION: What are two ways to verify that the temperature columns are numeric?
 
+## To illustrate why it would be easier to have cleaner column headings to begin with
+## Here's the same data but saved with our column frames
+mydat2<-read.csv("Calispell Creek and Tributary Temperatures2.csv", stringsAsFactors=F)
+
+## What data type does R assign to each column or mydat2?
+## Why is this different than rawdat?
+
 
 #################################
 ## 2) dplyr tool number 0: tbl_df

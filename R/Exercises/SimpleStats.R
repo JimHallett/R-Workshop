@@ -74,6 +74,52 @@ barplot(speciesplot)
 barplot(speciesplot[order(speciesplot)], 
 horiz = TRUE,  
 xlab = "Proportion of total capture")  
+
+# This is obviously very rudimentary and there are other graphics packages that provide greater
+# flexibility. We'll use ggplot2 for this session. Some others including ggvis are still being
+# developed and will provide interactivity. Shiny also provides direct interaction, but requires
+# initial setup - more on that later.
+
+library(ggplot2)
+
+# We'll first look at the relationship between fin length and weight in Spokane River redband.
+# First, a simple scatterplot:
+
+qplot(FinLength, Weight, data = Redband)
+
+# Note that we can also identify the dataset by using Redband$FinLength. 
+
+# This scatterplot shows a curvilinear relationship between weight and fin length. 
+# We can deal with this in several ways, but here we apply a log transformation to the data.
+
+qplot(log(FinLength), log(Weight), data = Redband, geom=c("point"))
+
+# That helps linerize the data. So now we'll create a linear regression line to fit the data.
+
+qplot(log(FinLength), log(Weight), data = Redband, geom=c("smooth"),  method="lm", formula=y~x)
+
+# And now combine both the linear regression line with the point data. 
+
+qplot(log(FinLength), log(Weight), data = Redband, geom=c("point", "smooth"),  method="lm", formula=y~x)
+
+# There are of course additional options for graph creation including axis labels.
+
+qplot(log(FinLength), log(Weight), data = Redband, geom=c("point", "smooth"),  method="lm", 
+      formula=y~x, xlab="Fin Length", ylab = "Weight")
+
+# The graph can be saved as an object, too.
+
+graph1 <- qplot(log(FinLength), log(Weight), data = Redband, geom=c("point", "smooth"),  method="lm", formula=y~x)
+
+
+
+
+
+
+
+
+
+
  
 
 

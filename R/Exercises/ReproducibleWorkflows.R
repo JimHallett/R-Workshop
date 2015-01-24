@@ -74,10 +74,10 @@ mydat$winchester_temp<-as.numeric(mydat$winchester_temp)
 ## QUESTION: What are two ways to verify that the temperature columns are numeric?
 
 ## To illustrate why it would be easier to have cleaner column headings to begin with
-## Here's the same data but saved with our column frames
+## Here's the same data but saved with our new column names
 mydat2<-read.csv("Calispell Creek and Tributary Temperatures2.csv", stringsAsFactors=F)
 
-## What data type does R assign to each column or mydat2?
+## What data type does R assign to each column of mydat2?
 ## Why is this different than rawdat?
 
 
@@ -176,7 +176,7 @@ is.na(c(3,5, NA, 6))
 !is.na(c(3,5, NA, 6))
 
 ## TASK: Time to put this all together. Please filter all of the rows of wtemp 
-## For which the value of calispell_temp is not NA.
+## for which the value of calispell_temp is not NA.
 ## How many rows match this condition?
 
 
@@ -252,7 +252,7 @@ wtemp2<-mutate(wtemp, date2=mdy(date), month=month(date2), year=year(date2))
 summarize(wtemp2, avg_temp_calispell= mean(calispell_temp, na.rm=TRUE))
 
 ## QUESTION: What did na.rm=TRUE?
-## QUESTION: Can you use summarize to get the max value for the calispell_temp variable?
+## TASK: Can you use summarize to get the max value for the calispell_temp variable?
 ## QUESTION: Do you think this level of aggregation is very interesting?
 
 
@@ -264,7 +264,7 @@ summarize(wtemp2, avg_temp_calispell= mean(calispell_temp, na.rm=TRUE))
 ## I'm more interested in how temperature changes with month or year.
 ## If we add the group_by function, summarize will give us the requested value FOR EACH GROUP.
 
-## First, let's create a new dataframe table that is equal to to wtemp but includes two grouping variables: month and year
+## First, let's create a new dataframe table that is equal to to wtemp2 but includes two grouping variables: month and year
 wtemp_by_monthyear<-group_by(wtemp2, month, year)
 ## QUESTION: Print wtemp and wtemp_by_month. Can you see how they differ?
 

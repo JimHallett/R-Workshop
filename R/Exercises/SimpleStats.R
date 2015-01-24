@@ -1,0 +1,43 @@
+################################################################################
+### R-WORKSHOP                                                               ###
+### EXERCISE 3: Simple statistics                                            ### 
+################################################################################
+
+## OBJECTIVE: To explore some simple statistics and analyses.
+
+## We'll use some fish data from Chuck Lee at WDFW for the Lower Spokane River.
+
+## First we'll read in the data.
+
+SpokaneFish <- read.csv(file="LowSpokaneClean.csv", header=TRUE, sep=',')
+# Fix dates
+SpokaneFish$Date <- as.Date(SpokaneFish$Date, "%m/%d/%Y")
+# Make it easier to see in the console
+tbl_df(SpokaneFish)
+
+# We often want to look at frequency data, for example, the numbers of each fish
+# species in our samples.
+
+# We use the table command to determine counts:
+
+table(SpokaneFish$Species)  # Prints number of each species to the console
+
+# We can also store this table
+
+Species.freq <- table(SpokaneFish$Species)
+
+# We then also allows us to calculate proportions
+
+prop.table(Species.freq)
+
+# Or round to 2 decimal places
+
+round(prop.table(Species.freq),3)
+
+# Or express as percent by multiplying by 100
+
+round(prop.table(Species.freq), 3) * 100
+
+
+
+

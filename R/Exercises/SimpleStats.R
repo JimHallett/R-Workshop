@@ -140,8 +140,11 @@ hist(Redband$FinLength, breaks=100, main="", col="Red")
 
 # This plot suggests that there are at least 3 cohorts based on fin length. 
 # Let's look at this as a function of scale age.
+# First we create a factor for scale age.
 
 scale.f <- factor(Redband$ScaleAge)
+
+sm.density.compare(Redband$FinLength, Redband$ScaleAge, lwd=3)
 
 
 

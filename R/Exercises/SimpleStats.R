@@ -64,9 +64,17 @@ describe(Redband$Weight)
 
 # We created several tables above, but now we'll save one to plot:
 
-species.plot <- round(prop.table(Species.freq), 3) * 100
+speciesplot <- round(prop.table(Species.freq), 3) * 100
 
-barplot(species.plot)
+barplot(speciesplot)
+
+# Well this is boring, but we can at least see some of the parameters that can be changed. For example,
+# we can change the order of the bars, flip them horizontally, and add an x-label.
+
+barplot(speciesplot[order(speciesplot)], 
+horiz = TRUE,  
+xlab = "Proportion of total capture")  
+ 
 
 
 

@@ -129,7 +129,19 @@ qplot(log(FinLength), log(Weight), data = Redband, colour=factor(ScaleAge))
 # This is a quick and dirty look seems to support at the relationship between scale age and growth.
 
 
+# Let's next look at the relationship between fin length (quantitative) and scale age (qualitative).
+# We'll start with a simple histogram. 
 
+hist(Redband$FinLength)
+
+# Which we'll add some color to and adjust the bar widths.
+
+hist(Redband$FinLength, breaks=100, main="", col="Red")
+
+# This plot suggests that there are at least 3 cohorts based on fin length. 
+# Let's look at this as a function of scale age.
+
+scale.f <- factor(Redband$ScaleAge)
 
 
 

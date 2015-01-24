@@ -38,6 +38,51 @@ round(prop.table(Species.freq),3)
 
 round(prop.table(Species.freq), 3) * 100
 
+# We'll just consider redband trout (RB) to look at quantitative variables
+
+Redband <- SpokaneFish[ which(SpokaneFish$Species=='RB'), ]   #There are several ways to subset data
+
+# Descriptive statistics are useful for understanding data. The redband data include weights and fin lengths.
+# We'll look at these 2 variables. The built in function summary is useful.
+
+summary(Redband$FinLength)
+summary(Redband$Weight)
+
+# We can run the command for the entire data table, but some results may be meaningless.
+
+summary(Redband)
+
+# There are other descriptors in packages such as psych. This package will have to be installed.
+
+library(psych)
+
+describe(Redband$FinLength) 
+describe(Redband$Weight)
+
+# We also gain a lot of understanding by graphing our data. We'll start with some quick and simple
+# plots. 
+
+# We created several tables above, but now we'll save one to plot:
+
+species.plot <- round(prop.table(Species.freq), 3) * 100
+
+barplot(species.plot)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

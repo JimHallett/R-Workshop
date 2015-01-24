@@ -109,7 +109,24 @@ qplot(log(FinLength), log(Weight), data = Redband, geom=c("point", "smooth"),  m
 
 # The graph can be saved as an object, too.
 
-graph1 <- qplot(log(FinLength), log(Weight), data = Redband, geom=c("point", "smooth"),  method="lm", formula=y~x)
+graph1 <- qplot(log(FinLength), log(Weight), data = Redband, geom=c("point", "smooth"),  
+           method="lm", 
+           formula=y~x, xlab="Fin Length", ylab="Weight")
+
+# This can be viewed again or placed in a document.
+
+graph1
+
+# This dataset has some additional variables that can be explored.We'll look at the distributions
+# of fin length and weight as a function of scale age.
+# This time we'll develop our linear model of weight~fin length first and use scale age as a 
+# factor.
+
+weightmodel <- lm(Weight~FinLength + factor(ScaleAge), data=Redband)
+
+qplot(log(FinLength), log(Weight), data = Redband, colour=factor(ScaleAge))
+
+# This is a quick and dirty look seems to support at the relationship between scale age and growth.
 
 
 

@@ -142,9 +142,31 @@ hist(Redband$FinLength, breaks=100, main="", col="Red")
 # Let's look at this as a function of scale age.
 # First we create a factor for scale age.
 
-scale.f <- factor(Redband$ScaleAge)
+scale.f <- factor(Redband$ScaleAge)      #Creates a factor of the scale ages
+
+# Now we'll create a density plot based on this factor. The line width was increased (lwd=3)
+# to make it easier to see.
 
 sm.density.compare(Redband$FinLength, Redband$ScaleAge, lwd=3)
+
+# We can also show this as a whisker plot:
+
+plot(Redband$FinLength ~ scale.f)  
+
+# Both graphs show some clear separation between some scale age classes and a degree of overlap
+# for the later classes. We can examine this further with analysis of variance (ANOVA). The 
+# question is whether the means of the groups differ.
+
+aovout = aov(Redband$Weight ~ factor(Redband$ScaleAge))  
+summary(aovout)
+
+# This shows us that there are significant differences among the 8 scale age groups.
+# Next we'll do a multiple comparisons test to see where the differences reside.
+
+TukeyHSD(aovout, conf.level = 0.95)
+
+# This test indicates that scale age groups 0, 1, 2, 3 and 4 are distinct. Groups 4 and 5 overlap
+# and there is substantial overlap amongst the later age groups. 
 
 
 

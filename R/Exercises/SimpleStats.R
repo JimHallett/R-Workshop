@@ -154,7 +154,6 @@ qplot(log(Length), log(Weight), data = Redband, color=factor(ScaleAge))
 weightmodel2 <- lm(Weight~Length + factor(ScaleAge), data=Redband)
 summary(weightmodel2)
 
-
 # This quick and dirty look seems to support at the relationship between scale age and growth.
 # But it could be confounded by a relationship between fin length (quantitative) and scale age (qualitative).
 # Relating a continuous response variable with a categorical (>2 categories) explanatory variable suggests ANOVA

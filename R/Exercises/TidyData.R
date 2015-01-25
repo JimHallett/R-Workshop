@@ -32,7 +32,7 @@ library(dplyr)
 
 #######################################
 ##1) Problem: Column headers are values
-## tidyr solution: gather
+## tidyr solution: gather and spread
 #######################################
 
 ## We've already seen this problem before! 
@@ -41,7 +41,6 @@ library(dplyr)
 ## If it isn't still in your workspace, load it this way:
 wtemp<-tbl_df(read.csv("Calispell Creek and Tributary Temperatures2.csv", stringsAsFactors=F))
 wtemp
-
 
 ## QUESTION: What is messy about this data?
 
@@ -55,15 +54,25 @@ wtemp
 ## The name of the value column to create in the output
 ## The columns to gather
 
-gather(wtemp, site, temperature, calispell_temp:winchester_temp)
+wtemp_gathered<-gather(wtemp, site, temperature, calispell_temp:winchester_temp)
+wtemp_gathered
 
 ## QUESTION: What are the dataframe, key and value names and gathered columns in the above call?
 
 ## QUESTION: Even though I would say that having values stored as column headers is messy,
-## at times it is extremely useful! Can you name a scenario in which you would want to convert 
-## tidy data to this "wider" format?
+## at times it is extremely useful! Name a scenario in which you would want to convert 
+## tidy data to this "wider" format.
 
-## Fortunately, tidyr includes a function to make it easy for us to spread
+## Fortunately, tidyr includes a function to make it easy for us to spread data back out
+## From the help, we just specify the dataframe, key and value
+?spread
+
+## Try it, this time using the pipeline syntax:
+wtemp_gathered %>% 
+  spread( site, temperature, fill=NA)
+
+## This is also helpful whenever a single observation is recorded in multiple rows.
+## A tip-off that this might be the case is when one column has a name like "variable" and another "value"
 
 
 #########################################################
@@ -73,32 +82,28 @@ gather(wtemp, site, temperature, calispell_temp:winchester_temp)
 
 ## Let's revisit the Lower Spokane fish data
 ## I've added a some - but not all ;) - of the messiness for pedagogical purposes
-## Let's have a look:
+## Let's read it in and convert it to a dataframe table:
+fishcatch<-dat %>%
+  tbl_df()
 
-dat<-tbl_df(read.csv("LowSpokaneClean.csv")) %>%
-  mutate(FishLength_Weight=paste(FinLength, Weight, sep="_")) %>%
-  select(Date, Year, Pass, Site.No., FishNo, Species, FishLength_Weight, ScaleAge, CapturedFloyTagNo, AppliedFloyTagNo,
-         CapturedPITTagNo, ActivePITTagNo, AgeMethod)
+## Now have a look. Which column stores multiple variables?
+fishcatch
 
-fishcatch<-dat
-
-
+## The separate command helps us do that.
+## The separate command is smart and looks for a pattern to separate on
+## This is great! But we could specify if we wanted it,
+## as always look at the documentation for syntax: ?separate
 fishcatch %>%
   separate(FishLength_Weight, c("Length", "Width"))
 
-
-## TASK: Let's revisit the 'gathered' wtemp dataframe table. 
+## TASK: Let's revisit the gathered wtemp dataframe table. 
 ## It would be nice  to remove the "_temp" from each of the site names
-## Do this by adding to the pipeline I've started below. 
-## First seperate site into new "site" and "measurement" columns,
+## Do this by adding to that pipeline (copied below)
+## First separate site into new "site" and "measurement" columns,
 ## then remove the unnecessary "measurement" column (hint: select is helpful here)
 
-wtemp%>%
+wtemp_gathered <- wtemp %>%
   gather(site, temperature, calispell_temp:winchester_temp) 
-
-  # %>%
-  # separate(site, c("site", "measurement")) %>%
-  # select(-measurement)
 
 
 ############################################################
@@ -111,18 +116,25 @@ fishcatch
 
 ## QUESTION: What information is implicit based on a row/column combination?
 
-#The headers of CapturedFloyTagNo and AppliedFloyTagNo are all different values of what should be a "TagType" Variable
-
-## Let's verify that this is the case:
-fishcatch %>%
-  filter(!is.na(CapturedFloyTagNo), !is.na(AppliedFloyTagNo))
-
+## The headers "CapturedFloyTagNo" and "AppliedFloyTagNo" are all different values of 
+## what should be a "TagType" variable
 
 ## Let's continue to fishcatch pipeline to clean this up
 ## We can do it with the gather function, adding an argument to remove NAs
 fishcatch %>%
   separate(FishLength_Weight, c("Length", "Width")) %>%
   gather(TagType, TagName, CapturedFloyTagNo, AppliedFloyTagNo, na.rm=TRUE) 
+
+## And really what this variable tells us is: has this fish been tagged before?
+## We might prefer to store this information in a binary newCapture column 
+fishcatch %>%
+  separate(FishLength_Weight, c("Length", "Width")) %>%
+  gather(TagType, TagName, CapturedFloyTagNo, AppliedFloyTagNo, na.rm=TRUE) %>%
+  ## NEW CODE:
+  #create the newCapture column
+  mutate(newCapture=1, newCapture=ifelse(TagType=="CapturedFloyTagNo", 0, newCapture)) %>%
+  #remove the redundant TagType column
+  select(-TagType)
 
 
 ###############################################################################

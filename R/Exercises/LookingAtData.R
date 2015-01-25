@@ -85,7 +85,7 @@ cbind(participants, firstmatrix)
 
 ## One last problem, the names of the columns are not descriptive. So we'll fix that.
 
-## TASK4: Create a vector callend cnames containing "participant",time1", "time2", etc.
+## TASK4: Create a vector called cnames containing "participant",time1", "time2", etc.
 
 ## TASK5: Use the colnames() function to set the column names attribute for our 
 ## data frame. This will be similar to our use of dim() to set the dimension of a vector.

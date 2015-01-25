@@ -1,0 +1,32 @@
+---
+title: "R Resources"
+author: "Jim Hallett and Lauren Hallett"
+date: "R-Workshop, January 26-27, 2015"
+output: word_document
+---
+
+#Resources for R
+
+## Remember that a lot of help is available directly through RStudio. Packages are continually being updated, so be sure to check from time to time for new functionality.
+
+##Websites
+
+
+Quick-R                                            http://www.statmethods.net/index.html  
+
+Swirl provides a learning environment in R         http://swirlstats.com/
+
+RStudio has online tutorials and information       http://www.rstudio.com/resources/training/
+
+The R Manuals at CRAN                              http://cran.r-project.org/manuals.html
+
+Advanced R by Hadley Wickham                       http://adv-r.had.co.nz/
+
+R Programming.net has many additional resources    http://rprogramming.net/
+
+
+
+
+
+
+.

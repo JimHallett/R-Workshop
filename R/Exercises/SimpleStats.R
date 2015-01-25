@@ -55,7 +55,7 @@ round(prop.table(Species.freq), 2)
 # Let's focus on characterizing the size structure of the Redband trout population.
 
 # First create a dataframe that only includes Redband trout.
-Redband <- SpokaneFish[ which(SpokaneFish$Species=='RB'), ]   #This is one of several ways to subset data
+Redband <- SpokaneFish[ which(SpokaneFish$Species=='RB' & is.na(SpokaneFish$ScaleAge)==F), ]   #This is one of several ways to subset data
 
 # Descriptive statistics are useful for understanding data. The redband data include weights and fin lengths.
 # We'll look at these 2 variables. The built in function summary is useful.

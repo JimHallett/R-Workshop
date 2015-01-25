@@ -1,16 +1,38 @@
 ---
 title: "R-workshop Schedule"
-output: html_document
+output: word_document
 ---
 <br> 
 
 #MODULE 1: Introduction to R
 
 ##1) What is R and what are its virtues?
-**[Fill this in]**
+**What are the advantages of R**
+
+- The price is great and it's multiplatform
+- The number of packages for handling, visualising, and analysing data is phenomena
+- New analytical methods are often first presented in R
+- Strong support for data handling
+- Tools for communicating results, either traditional reports or producing interative websites
+- Extensible
+- The community of users is generally helpful
+- In conjunction with code repositories like github, collaborative projects are easy
+
+**What are the disadvantages of R**
+
+- There is a steep initial learning curve
+- Much R code is written to solve an immediate problem, so may not be readily understandable
+- Because of the focus on problem-solving, the processes of software development may be ignored
+- R has evolved over time, so there are inconsistencies between packages
+
+##2) Introduction to the R and RStudio interface
+
+- RStudio provides a browser or shell for work with R
+- There are 4 primary windows for editing code and viewing data, a command console,
+  an environment and history window, and a window for viewing help, files, plots, and packages
 
 
-##2) Basic building blocks of R
+##3) Basic building blocks of R
 ###Presentation 1: Functions, arguments and getting help
 **Writing R is like writing in English**
 
@@ -64,7 +86,7 @@ row.names(datstruct)<-NULL
 colnames(datstruct)<-c("Dimensions", "Homogeneous", "Hetergeneous")
 kable(datstruct)
 ```
-* Go into detail on each data type?
+
 
 ###Exercise 2: Looking at data
 1) Creating matrices and dataframes.
@@ -136,14 +158,12 @@ kable(datstruct)
 
 - **Separate:** break one column into two (similar to strsplit)
 
-###Exercise 6: Linking R with data storage
-- Excel vs csv
-- SQL
+
 
 <br>
 
 #MODULE 4: Putting it all together: R for better monitoring and reporting
-**[markdown etc]**
+ 
 
 
 

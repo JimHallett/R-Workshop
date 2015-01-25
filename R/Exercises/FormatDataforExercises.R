@@ -38,4 +38,12 @@ tog<-tog %>%
 
 write.csv(tog, "LittleSpokane_Messy.csv", row.names=F)
 
+dat2<-dat %>%
+  separate(FishLength_Weight, c("Length", "Weight")) %>%
+  select(Date, Year, Pass, Site, FishNo, Species, Length, Weight, ScaleAge)
 
+write.csv(dat2, "LowerSpokaneFish.csv", row.names=F)
+
+library(tidyr)
+
+dat2

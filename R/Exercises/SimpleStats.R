@@ -13,8 +13,7 @@
 
 ## First we'll read in the data and get it ready to use.
 
-SpokaneFish <- read.csv(file="LowSpokaneClean.csv", header=TRUE, sep=',')
-
+SpokaneFish <- read.csv(file="LowerSpokaneFish.csv", header=TRUE)
 # Fix dates
 SpokaneFish$Date <- as.Date(SpokaneFish$Date, "%m/%d/%Y")
 
@@ -60,7 +59,7 @@ Redband <- SpokaneFish[ which(SpokaneFish$Species=='RB'), ]   #This is one of se
 
 # Descriptive statistics are useful for understanding data. The redband data include weights and fin lengths.
 # We'll look at these 2 variables. The built in function summary is useful.
-summary(Redband$FinLength)
+summary(Redband$Length)
 summary(Redband$Weight)
 
 # We can run the command for the entire data table, but some results may be meaningless.
@@ -68,13 +67,13 @@ summary(Redband)
 
 # There are other descriptors in packages such as psych. This package will have to be installed.
 # You only have to do this step the first time! After you've installed, go ahead a comment this line out.
-#install.packages("psych") 
+install.packages("psych") 
 
 # But we need to load the package at the beginning of each work session.
 library(psych)
 
 # Check out the describe function in the psych library.
-describe(Redband$FinLength) 
+describe(Redband$Length) 
 describe(Redband$Weight)
 
 # QUESTION: What is the median legnth of a Redband trout in the Lower Spokane?
@@ -102,7 +101,7 @@ horiz = TRUE,
 ylab="Species",
 xlab="Percentage of total capture")  
 
-# QUESTION: What would you type to see other argument options in th barplot function?
+# QUESTION: What would you type to see other argument options in the barplot function?
 
 
 ################################################################################
@@ -118,19 +117,19 @@ library(ggplot2)
 
 # Let's revisit the Redband dataframe to look at the relationship between fin length and weight in Spokane River redband.
 # First, a simple scatterplot:
-qplot(FinLength, Weight, data = Redband) 
+qplot(Length, Weight, data = Redband) 
 
 # Note that we can also identify the dataset by using Redband$FinLength, etc. 
 
 # This scatterplot shows a curvilinear relationship between weight and fin length. 
 # We can deal with this in several ways, but here we apply a log transformation to the data.
-qplot(log(FinLength), log(Weight), data = Redband)
+qplot(log(Length), log(Weight), data = Redband)
 
 # That helps linerize the data. So now we'll create a linear regression line to fit the data.
-qplot(log(FinLength), log(Weight), data = Redband, geom=c("smooth"),  method="lm", formula=y~x)
+qplot(log(Length), log(Weight), data = Redband, geom=c("smooth"),  method="lm", formula=y~x)
 
 # And now combine both the linear regression line with the point data. 
-qplot(log(FinLength), log(Weight), data = Redband, geom=c("point", "smooth"),  method="lm", formula=y~x)
+qplot(log(Length), log(Weight), data = Redband, geom=c("point", "smooth"),  method="lm", formula=y~x)
 
 # QUESTION: By comparing the arguments specified in the above three graphs, what do you think the 
 # default option of geom=c() is?
@@ -144,15 +143,15 @@ qplot(log(FinLength), log(Weight), data = Redband, geom=c("point", "smooth"),  m
 
 # Our preliminary graphing indicates a positive relationship between  log(fin length) and log(weight). 
 # We could think of this as a simple linear model.
-weightmodel1 <- lm(Weight~FinLength, data=Redband)
+weightmodel1 <- lm(Weight~Length, data=Redband)
 summary(weightmodel1)
 
 # What if that's not the whole story? Sometimes weight is a factor of both length and age.
 # Let's first visualize how fine weight and legnth relate as a fuction of scale age.
-qplot(log(FinLength), log(Weight), data = Redband, color=factor(ScaleAge))
+qplot(log(Length), log(Weight), data = Redband, color=factor(ScaleAge))
 
 # We could think of this as a multiple regression model with one continuous and one categorical variable.
-weightmodel2 <- lm(Weight~FinLength + factor(ScaleAge), data=Redband)
+weightmodel2 <- lm(Weight~Length + factor(ScaleAge), data=Redband)
 summary(weightmodel2)
 
 # This quick and dirty look seems to support at the relationship between scale age and growth.
@@ -165,13 +164,13 @@ summary(weightmodel2)
 ################################################################################
 
 # We'll start with a simple histogram. 
-qplot(Redband$FinLength)
+qplot(Redband$Length)
 
 # QUESTION: Why did qplot default to a histogram? 
 
 # The histogram of fin lengths suggests that there are at least 3 cohorts.  
 # Let's look the length distribution within each age class.
-qplot(FinLength, data=Redband) + facet_wrap(~ScaleAge)
+qplot(Length, data=Redband) + facet_wrap(~ScaleAge)
 
 # To me, it looks like ScaleAge might characterize these three different length cohorts:
 # 1) The little guys (ScaleAge = 0)
@@ -179,12 +178,12 @@ qplot(FinLength, data=Redband) + facet_wrap(~ScaleAge)
 # 3) All the bigger guys (ScaleAge = 2-7)
 
 # Lets plot the distribution of FinLength within each ScaleAge 
-qplot(as.factor(ScaleAge), FinLength, fill=ScaleAge, data=Redband, geom=c("boxplot"))  
+qplot(as.factor(ScaleAge), Length, fill=ScaleAge, data=Redband, geom=c("boxplot"))  
 
 # Both density and boxplots plots for fin length show some clear separation between some 
 # scale age classes and a degree of overlap for the older classes. We can examine this further with 
 # analysis of variance (ANOVA). The question is whether the means of the groups differ.
-aovout = aov(Redband$FinLength ~ factor(Redband$ScaleAge))
+aovout = aov(Redband$Length ~ factor(Redband$ScaleAge))
 summary(aovout)
              
 # This shows us that there are significant differences among the 8 scale age groups.

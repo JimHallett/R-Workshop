@@ -204,6 +204,8 @@ TukeyHSD(aovout, conf.level = 0.95)
 
 # Does weight show the same pattern as fin length?
 
+###################################################################################################
+
 
 
 

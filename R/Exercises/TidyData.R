@@ -54,8 +54,8 @@ wtemp
 ## The name of the value column to create in the output
 ## The columns to gather
 
-wtemp_gathered<-gather(wtemp, site, temperature, calispell_temp:winchester_temp)
-wtemp_gathered
+wtemp_gathered<-gather(wtemp, site, temperature, calispell_temp:winchester_temp) %>%
+  print
 
 ## QUESTION: What are the dataframe, key and value names and gathered columns in the above call?
 
@@ -83,7 +83,7 @@ wtemp_gathered %>%
 ## Let's revisit the Lower Spokane fish data
 ## I've added a some - but not all ;) - of the messiness for pedagogical purposes
 ## Let's read it in and convert it to a dataframe table:
-fishcatch<-dat %>%
+fishcatch<-read.csv("LittleSpokane_Messy.csv") %>%
   tbl_df()
 
 ## Now have a look. Which column stores multiple variables?
@@ -126,16 +126,18 @@ fishcatch %>%
   gather(TagType, TagName, CapturedFloyTagNo, AppliedFloyTagNo, na.rm=TRUE) 
 
 ## And really what this variable tells us is: has this fish been tagged before?
-## We might prefer to store this information in a binary newCapture column 
-fishcatch %>%
+## We might prefer to store this information in a binary NewCapture column 
+## Let's do that, and save it as a fishcatch2
+fishcatch2<-fishcatch %>%
   separate(FishLength_Weight, c("Length", "Width")) %>%
   gather(TagType, TagName, CapturedFloyTagNo, AppliedFloyTagNo, na.rm=TRUE) %>%
-  ## NEW CODE:
-  #create the newCapture column
-  mutate(newCapture=1, newCapture=ifelse(TagType=="CapturedFloyTagNo", 0, newCapture)) %>%
+ 
+  ## NEW CODE SECTION:
+  #create the NewCapture column
+  mutate(NewCapture=1, NewCapture=ifelse(TagType=="CapturedFloyTagNo", 0, NewCapture)) %>%
   #remove the redundant TagType column
-  select(-TagType)
-
+  select(-TagType) %>%
+  print
 
 ###############################################################################
 ##4) Problem: Multiple types of observational units are stored in the same table
@@ -143,23 +145,51 @@ fishcatch %>%
 ## reduce those to unique observations
 ################################################################################
 
+## How are we doing? At first glance, fiscatch2 is looking pretty good! 
+## All the rows are observations, all the columns are variables.
+## But here, let's sort by Site and Pass. Do you seen the problem now?
 
-## USE THE BSC EFFORT DATA
-fishcatch %>%
-  select(ActivePITTagNo)%>%
-  unique()
+fishcatch2 %>%
+  arrange(Site, Pass)
 
 
+## Our solution is to create two dateframes that represent different observational levels.
+## The first will describe effort at the level of the site and pass, 
+## and second will describe fish size at the level of the individual fish.
 
-
-## Site information vs sampling information
-student_info <- students4 %>%
-  select(id, name, sex) %>%
-  unique %>%
+effortdat<-fishcatch2 %>%
+  select(Date, Site, Pass, Effort) %>%
+  unique() %>%
   print
 
-## Related problem: leaving blanks, relying on data to be sorted correctly
+## Site information vs sampling information
+fishdat <-fishcatch2 %>%
+  select(Date, Site, Pass, FishNo, Species, Length, Width, ScaleAge, NewCapture) 
 
+## QUESTION: How many rows are in effortdat? And in fishdat? 
+## How does this compare to the original fishcatch2?
+
+## Of course, for analysis we often want to join two dataframes at different scales.
+## For example, to assess the effect of site-level treatments on individuals,
+## Or to relate fish catch numbers with effort! 
+
+## So why did we separate?
+## 1) To reduce data entry errors (not repeating all that typing!).
+## 2) To reduce data storage requirements (the net size difference can be substantial).
+## 3) To easily mutate data at one level before linking it with another.
+    ## For example, we could summarize fishdat by count before joining with effortdat.
+
+
+## Once we want to link dataframes, we can do it with the merge command (in R's base package).
+## Try it:
+
+togdat<-merge(effortdat, fishdat)
+
+## If not specified, merge will act on as many shared columns as possible, and drop data that don't join.
+## But you could specify with by=c(column1, column2...).
+## And you can designate that every row of the first, or the second, or both dataframes be retained, using
+## all.x=TRUE, all.y=TRUE and all=TRUE, respectively.
+## For more (as always): ?merge
 
 
 #################################################################################
@@ -168,13 +198,37 @@ student_info <- students4 %>%
 ################################################################################
 
 ## The fifth common messy data scenario is when a single observational unit is stored in multiple tables.
-## It’s the opposite of the fourth problem.
+## This often happens when the tables are split up by another variable; for example, by year.
+## As long as the format for the individual recors is consistent, this is an easy problem to fix:
+    ## Read the files into a list of tables.
+    ## For each table, add a new column that records the original file name 
+    ## (because the file name is often the value of an important variable)
+    ## Combine all tables
 
-## passed and failed example
-## actually is a variable called status
+## Run this code through - it generates an example of what I'm talking about.
+pass1<- fishdat %>% 
+  filter(Pass==1)%>%
+  select(-Pass)
+pass2<-fishdat %>%
+  filter(Pass==2) %>%
+  select(-Pass)
 
+## Have a look at each data frame.
+pass1
+pass2
 
+## QUESTION: Where is the information on pass number stored in these dataframes?
 
+## To fix this, first create a new column in each dataframe recording that information.
+pass1<-mutate(pass1, Pass=1)
+pass2<-mutate(pass2, Pass=2)
+
+## Then bind the dataframes together.
+tog<-rbind(pass1, pass2) %>%
+  print
+
+## QUESTION: This type of messiness often happens when data are collected at different points of time.
+## Can you think of a reason why the fix might not always be so easy?
 
 
 

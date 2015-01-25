@@ -10,19 +10,19 @@ output: word_document
 **What are the advantages of R**
 
 - The price is great and it's multiplatform
-- The number of packages for handling, visualising, and analysing data is phenomena
+- It's a scripted language and products are reproducible
+- Objects created in R can be reused
+- The number of packages for handling, visualising, and analysing data is phenomenal
 - New analytical methods are often first presented in R
 - Strong support for data handling
 - Tools for communicating results, either traditional reports or producing interative websites
 - Extensible
-- The community of users is generally helpful
+- The community of users is generally very helpful
 - In conjunction with code repositories like github, collaborative projects are easy
 
 **What are the disadvantages of R**
 
 - There is a steep initial learning curve
-- Much R code is written to solve an immediate problem, so may not be readily understandable
-- Because of the focus on problem-solving, the processes of software development may be ignored
 - R has evolved over time, so there are inconsistencies between packages
 
 ##2) Introduction to the R and RStudio interface

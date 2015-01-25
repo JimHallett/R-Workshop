@@ -5,7 +5,7 @@
 
 ## OBJECTIVE: In this exercise we will learn how to (1) create matrices and dataframes, 
 ## (2) read data in from external files, (3) use builtin functions to examine data objects, 
-## (4) deal with missing values, and subset vectors, matrices, and dataframes.
+## (4) deal with missing values, and (5) subset vectors, matrices, and dataframes.
 
 
 ################################################################################
@@ -93,80 +93,59 @@ cbind(participants, firstmatrix)
 ## TASK6: View the final data frame.
 
 
+################################################################################
+### Objective 2: Reading data from external files                            ### 
+################################################################################
+
+## R is quite versatile in pulling data in from various file types and databases. 
+## We won't have time to consider all of the possibilities and will use very 
+## straightforward comma separated values or csv files. We recognize that most
+## participants use Excel and although it is possible to pull data directly from 
+## Excel, there are a number of gotchas (e.g., extraneous formulas, graphics, etc.)
+## that can create problems. Most of the functions that can directly read Excel
+## sheets also require java or perl add-ins. 
+
+## Task1: Make sure that the data file(s) are in  your working directory. 
+## Hint: Use the dir() function to see if the file is in your working directory.
+## If not, use the getwd() function to see what directory has been set.
+## You can change the working directory
+## from the Session menu above. You can also check the directory listing using the 
+## Files tab in the lower right window.
 
 
 
+## Now we'll use the read.csv() function:
+
+wshpfolks <- read.csv(file="whoshere.csv", head=TRUE, sep=",")
+
+## QUESTION: What are the characteristics of this dataset?
+## TASK: Find the class and dimensions.
+
+## You can always call up the help() function. Just insert the function name!
+
+help(read.csv)
+
+## You can use the View() function to look at the data table. Try it!
+
+## You can also use the names() function to look at the variable names:
+
+names(wshpfolks)
+
+## You can isolate individual columns using datframe$columnname, for example:
+
+wshpfolks$Participant
+
+## TASK: Do this for the Organization variable. How many levels are there?
 
 
+################################################################################
+### Objective 3: USe built-in functions to examine data objects              ### 
+################################################################################
 
+## We're going to read in a dataset that we'll be using from time to time.
 
+Redband <- read.csv("LowSpokaneClean.csv")
 
-
-
-
-
-
-
-
-
-## We can enter the elements of a matrix from the keyboard. 
-
-alpha <- matrix(c(1, 2, 3, 4), nrow = 2)
-
-## QUESTION: How are the rows and columns of the matrix filled by this command? 
-## TASK: Look at the matrix!
-
-## There are several functions that can inform us about an object:
-## class() can confirm whether alpha is a matrix or not. Try it.
-## dim() tells us the numbers of rows and columns.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-popproj <- matrix(c(0, 0.74, 0, 0, 0, 0.92, 0.27, 0, 0.92), ncol=3, nrow=3)
-
-popproj    #This is a projection matrix, fecundity in the first row, probability of moving or surviving
-           # to the next stage.
-
-## So for fun let's enter a vector of population numbers in 3 stage classes.
-
-popvector <- matrix(c(30, 100, 70), ncol=1)       #Starting population vector
-popvector
-
-## We can now calculate population numbers at the next time period.
-
-nextgen <- popproj %*% popvector   
-nextgen
-
-## We could continue to project the population out this way, and R, like other languages,
-## allows us to automate the process.
-
-## From population biology, the first eigenvalue is the population growth rate when the stable
-## age or stage distribution is reached. The latter is given by the first eigenvector. Both are 
-## easily calculated from the population projection matrix:
-
-eigen(popproj)
-
-
-
-
-###############################################################################################
 
 ## R has a number of useful functions to help keep track of data structures in the current
 ## working session. We can list all the objects with ls().
@@ -175,18 +154,10 @@ ls()
 
 ## We may have to check the class of an object, using class().
 
-class(Redband)
-
-class(popprojection)
-
-class(Species.freq)
-
-class(aovout)
+class(wshpfolks)
 
 ## For several types of objects we may need to know the dimensions, type dim(). This will always
 ## give rows and then columns.
-
-dim(popprojection)
 
 dim(Redband)
 
@@ -194,22 +165,19 @@ dim(Redband)
 
 ncol(Redband)
 
-ncol(popvector)
 
 ## What if you can't remember all the variable names for a dataset. Easy type names() with the 
 ## name of the object.
 
-names(Redband)
+## TASK: Run the names command for the Redband dataset
 
-names(popprojection)      #This is a matrix!
+
+## QUESTION: What happens when we do this for a matrix?
+## TASK: Try the names() function on firstmatrix.
 
 ## Sometimes we need to just get a quick look at the columns of a dataframe. We can use summary().
 
 summary(Redband)
-
-summary(popprojection)    #Note that is does the summary for each vector or column of the matrix.
-
-## 
 
 ## Frequently we need to know the data type for the columns in a dataframe. We'll do this for the 
 ## Redband dataframe.
@@ -220,5 +188,81 @@ str(Redband)
 ## correctly
 
 
+################################################################################
+### Objective 4: Missing data                                                ### 
+################################################################################
+
+## R represents missing values in 2 ways: if the data are not available
+## (e.g., technician falls out of the boat before weighing a fish), then it is
+## denoted NA. Sometimes a calculation will result in an impossible value, such
+## as dividing by zero. R uses NaN (not a number) for these situations. 
+
+## We can check for missing values with the is.na() function.
+## QUESTION: Are there missing values in the Redband data for weight?
+## TASK: Use the is.na() function to check.
+
+## Depending on the operation, R will delete records where data are missing. 
+## For example, if we are looking at the relationship between length and weight, 
+## any records missing either length or weight would not be used.
+
+## If you use a placeholder for a missing value, it will have to be recoded to NA.
+## This can be done in R, but we will leave it for later.
+
+
+
+################################################################################
+### Objective 5: Subsetting vectors, matrices, and dataframes                ### 
+################################################################################
+
+## We've already given you a clue about how to subset a dataframe by isolating 
+## individual variables (dataframe$variable).
+## The Redband dataset has 16 variables, but we may only need to be concerned with
+## a few of those. We'll pull out Species, Finlength, and Weight.
+
+RedbandSubset <- subset(Redband, select = c("Species", "FinLength", "Weight"))
+
+## QUESTION: Dang, I wanted to keep the ScaleAge variable. Can you fix this?
+## TASK: Perform the subset function again.
+
+## Of course, similar methods exist for vectors and matrices. But we have to be
+## clear about the column or row numbers involved. 
+
+## Remember firstmatrix, we want to remove column 6 and row 4. 
+## Print firstmatrix. Notice the row and column numbers.
+## TASK: Usinig separate commands for each operation, create
+## firstmatrixReduced <- firstmatrix[-4,]. Then for column 6:
+## firstmatrixReduced <- firstmatrixReduced[,-6]
+
+
+################################################################################
+### Bonus: creating a population projection matrix!                          ### 
+################################################################################
+
+## For folks that might work with age or stage structured populations, R can be used to 
+## analyse population projection matrices. Projection matrices have fecundity in the first row, 
+## probability of transition to the next stage in the other rows.
+
+popproj <- matrix(c(0, 0.74, 0, 0, 0, 0.92, 0.27, 0, 0.92), ncol=3, nrow=3)
+
+popproj    
+
+## So for fun let's enter a vector of population numbers in 3 stage classes.
+
+popvector <- matrix(c(30, 100, 70), ncol=1) #Starting population vector with a dimension.
+popvector
+
+## We can now calculate population numbers at the next time period.
+
+nextgen <- popproj %*% popvector      #Note that we use matrix multiplication notation %.%
+nextgen
+
+## We could continue to project the population out this way, and R, like other languages,
+## allows us to automate the process.
+
+## From population biology, the first eigenvalue is the population growth rate when the stable
+## age or stage distribution is reached. The latter is given by the first eigenvector. Both are 
+## easily calculated from the population projection matrix:
+
+eigen(popproj)
 
 

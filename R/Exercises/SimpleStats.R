@@ -14,10 +14,13 @@
 ## First we'll read in the data and get it ready to use.
 
 SpokaneFish <- read.csv(file="LowSpokaneClean.csv", header=TRUE, sep=',')
+
 # Fix dates
 SpokaneFish$Date <- as.Date(SpokaneFish$Date, "%m/%d/%Y")
-# Make it easier to see in the console
-tbl_df(SpokaneFish)
+
+# Have a look at the head and structure of SpokaneFish
+head(SpokaneFish)
+str(SpokaneFish)
 
 ################################################################################
 ### EXERCISE 1: Looking at frequencies                                       ###
@@ -27,182 +30,171 @@ tbl_df(SpokaneFish)
 # species in our samples.
 
 # We use the table command to determine counts:
-
 table(SpokaneFish$Species)  # Prints number of each species to the console
 
-# Create a table of captures at each sampling site.
+# TASK: Use the table function to create a table of captures at each sampling site.
 
 # We can also store tables, as done here for fish species:
-
 Species.freq <- table(SpokaneFish$Species)
 
-# R can then calculate proportions:
-
+# We can use this stored table to further characterize the data.
+# For example, R can then calculate proportions:
 prop.table(Species.freq)
 
-# We can round to 2 decimal places:
-
+# Don't think the data are quite that precise! Let's round to 2 decimal places:
 round(prop.table(Species.freq), 2)
 
-# Is this satisfactory? How might you modify the result?
+# QUESTION: Is this satisfactory? How might you modify the result?
+# TASK: Sometimes we'll want to convert to percentages. Can you do that for this example?
 
-# Sometimes we'll want to convert to percentages. Can you do that for this example?
 
 ################################################################################
-### EXERCISE 2: Looking at quantitative variables                            ###
+### EXERCISE 2: Summary statistics                                           ###
 ################################################################################
 
-# We'll just consider redband trout (RB) to look at quantitative variables
+# By a large margin Redband trout was the most common species.
+# Let's focus on characterizing the size structure of the Redband trout population.
 
+# First create a dataframe that only includes Redband trout.
 Redband <- SpokaneFish[ which(SpokaneFish$Species=='RB'), ]   #This is one of several ways to subset data
 
 # Descriptive statistics are useful for understanding data. The redband data include weights and fin lengths.
 # We'll look at these 2 variables. The built in function summary is useful.
-
 summary(Redband$FinLength)
 summary(Redband$Weight)
 
 # We can run the command for the entire data table, but some results may be meaningless.
-
 summary(Redband)
 
 # There are other descriptors in packages such as psych. This package will have to be installed.
-# Type install.packages("psych") in the console.
+# You only have to do this step the first time! After you've installed, go ahead a comment this line out.
+#install.packages("psych") 
+
+# But we need to load the package at the beginning of each work session.
 library(psych)
 
+# Check out the describe function in the psych library.
 describe(Redband$FinLength) 
 describe(Redband$Weight)
 
+# QUESTION: What is the median legnth of a Redband trout in the Lower Spokane?
+
 
 ################################################################################
-### EXERCISE 3: Simple plotting                                              ###
+### EXERCISE 3: Exploratory graphing                                         ###
 ################################################################################
 
-# We also gain a lot of understanding by graphing our data. We'll start with some quick and simple
-# plots. 
+# We also gain a lot of understanding by graphing our data. 
+# We'll start with some quick and simple plots. 
 
-# We created several tables above, but now we'll save one to plot:
-
+# We created several tables above, but now we'll save the species frequency table 
+# in a dataframe called "speciesplot" 
 speciesplot <- round(prop.table(Species.freq), 3) * 100
 
-barplot(speciesplot)
+# A quick bargraph really highlights how common the Redband trout is!
+barplot(speciesplot, xlab="Species", ylab="Percentage of total capture")
 
-# Well this is boring, but we can at least see some of the parameters that can be changed. For example,
-# we can change the order of the bars, flip them horizontally, and add an x-label.
-
+# Even though barplot is a quick and dirty way to visualize, you can still "dress it up" a lot.
+# We can do this altering the input dataframe or specifying arguments in the function.
+# For example, we can change the order of the bars and flip them horizontally. And keep on adding axes labels!
 barplot(speciesplot[order(speciesplot)], 
 horiz = TRUE,  
-xlab = "Proportion of total capture")  
+ylab="Species",
+xlab="Percentage of total capture")  
+
+# QUESTION: What would you type to see other argument options in th barplot function?
 
 
 ################################################################################
-### EXERCISE 4: Slightly more advanced plotting                              ###
+### EXERCISE 4: More flexible exploratory graphing with ggplot2              ###
 ################################################################################
 
-# The previous plots are obviously very rudimentary and there are other graphics packages that 
-# provide greater flexibility. We'll use ggplot2 for this session. Some others including ggvis
-# are still being developed and will provide interactivity. Shiny also provides direct 
-# interactivity, but requires initial setup - more on that later.
+# The previous function barplot makes one type of plot (a barplot!).
+# The ggplot2 package provides a "quick plot" option that is very flexible.
+# Changing the arguments in qplot can create many different types of graphs.
 
+# First, load in the ggplot2 package.
 library(ggplot2)
 
-# We'll first look at the relationship between fin length and weight in Spokane River redband.
+# Let's revisit the Redband dataframe to look at the relationship between fin length and weight in Spokane River redband.
 # First, a simple scatterplot:
-
 qplot(FinLength, Weight, data = Redband) 
 
 # Note that we can also identify the dataset by using Redband$FinLength, etc. 
 
 # This scatterplot shows a curvilinear relationship between weight and fin length. 
 # We can deal with this in several ways, but here we apply a log transformation to the data.
-
-qplot(log(FinLength), log(Weight), data = Redband, geom=c("point"))
+qplot(log(FinLength), log(Weight), data = Redband)
 
 # That helps linerize the data. So now we'll create a linear regression line to fit the data.
-
 qplot(log(FinLength), log(Weight), data = Redband, geom=c("smooth"),  method="lm", formula=y~x)
 
 # And now combine both the linear regression line with the point data. 
-
 qplot(log(FinLength), log(Weight), data = Redband, geom=c("point", "smooth"),  method="lm", formula=y~x)
 
-# There are of course additional options for graph creation including axis labels.
+# QUESTION: By comparing the arguments specified in the above three graphs, what do you think the 
+# default option of geom=c() is?
+# Check that you are right:
+?qplot
 
-qplot(log(FinLength), log(Weight), data = Redband, geom=c("point", "smooth"),  method="lm", 
-      formula=y~x, xlab="Fin Length", ylab = "Weight")
 
-# The graph can be saved as an object, too.
+################################################################################
+### EXERCISE 5: Linear models                                                ###
+################################################################################
 
-graph1 <- qplot(log(FinLength), log(Weight), data = Redband, geom=c("point", "smooth"),  
-           method="lm", 
-           formula=y~x, xlab="Fin Length", ylab="Weight")
+# Our preliminary graphing indicates a positive relationship between  log(fin length) and log(weight). 
+# We could think of this as a simple linear model.
+weightmodel1 <- lm(Weight~FinLength, data=Redband)
+summary(weightmodel1)
 
-# This can be viewed again or placed in a document.
+# What if that's not the whole story? Sometimes weight is a factor of both length and age.
+# Let's first visualize how fine weight and legnth relate as a fuction of scale age.
+qplot(log(FinLength), log(Weight), data = Redband, color=factor(ScaleAge))
 
-graph1
-
-# This dataset has some additional variables that can be explored.We'll look at the distributions
-# of fin length and weight as a function of scale age.
-# This time we'll develop our linear model of weight~fin length first and use scale age as a 
-# factor.
-
-weightmodel <- lm(Weight~FinLength + factor(ScaleAge), data=Redband)
-
-qplot(log(FinLength), log(Weight), data = Redband, colour=factor(ScaleAge))
+# We could think of this as a multiple regression model with one continuous and one categorical variable.
+weightmodel2 <- lm(Weight~FinLength + factor(ScaleAge), data=Redband)
+summary(weightmodel2)
 
 # This quick and dirty look seems to support at the relationship between scale age and growth.
+# But it could be confounded by a relationship between fin length (quantitative) and scale age (qualitative).
+# Relating a continuous response variable with a categorical (>2 categories) explanatory variable suggests ANOVA
 
-# Let's next look at the relationship between fin length (quantitative) and scale age (qualitative).
+
+################################################################################
+### EXERCISE 6: Analysis of Variance                                         ###
+################################################################################
+
 # We'll start with a simple histogram. 
+qplot(Redband$FinLength)
 
-hist(Redband$FinLength)
-
-# Which we'll add some color to and adjust the bar widths.
-
-hist(Redband$FinLength, breaks=100, main="", col="Red")
-
-# Plot the histgram for redband weight. 
+# QUESTION: Why did qplot default to a histogram? 
 
 # The histogram of fin lengths suggests that there are at least 3 cohorts.  
-# Let's look at this as a function of scale age.
-# First we create a factor for scale age:
+# Let's look the length distribution within each age class.
+qplot(FinLength, data=Redband) + facet_wrap(~ScaleAge)
 
-scale.f <- factor(Redband$ScaleAge)      #Creates a factor of the scale ages
+# To me, it looks like ScaleAge might characterize these three different length cohorts:
+# 1) The little guys (ScaleAge = 0)
+# 2) The mid-little guys (ScaleAge = 1)
+# 3) All the bigger guys (ScaleAge = 2-7)
 
-# What does this factor look like?
+# Lets plot the distribution of FinLength within each ScaleAge 
+qplot(as.factor(ScaleAge), FinLength, fill=ScaleAge, data=Redband, geom=c("boxplot"))  
 
-# Now we'll create a density plot based on this factor. The line width is increased (lwd=3)
-# to make it easier to see.
-
-sm.density.compare(Redband$FinLength, Redband$ScaleAge, lwd=3)
-
-# We can also show this as a whisker plot:
-
-plot(Redband$FinLength ~ scale.f) 
-
-
-################################################################################
-### EXERCISE 5: Testing for differences                                      ###
-################################################################################
-
-
-# Both density and whisker plots for fin length show some clear separation between some 
+# Both density and boxplots plots for fin length show some clear separation between some 
 # scale age classes and a degree of overlap for the older classes. We can examine this further with 
 # analysis of variance (ANOVA). The question is whether the means of the groups differ.
-
-
-aovout.fl = aov(Redband$FinLength ~ factor(Redband$ScaleAge))
-summary(aovout.fl)
+aovout = aov(Redband$FinLength ~ factor(Redband$ScaleAge))
+summary(aovout)
              
 # This shows us that there are significant differences among the 8 scale age groups.
 # Next we'll do a multiple comparisons test to see where the differences reside.
-
 TukeyHSD(aovout, conf.level = 0.95)
 
 # This test indicates that scale age groups 0, 1, 2, 3 and 4 are distinct. Groups 4 and 5 overlap
 # and there is substantial overlap amongst the later age groups. 
 
-# Does weight show the same pattern as fin length?
+# QUESTION: Does weight show the same pattern as fin length?
 
 ###################################################################################################
 

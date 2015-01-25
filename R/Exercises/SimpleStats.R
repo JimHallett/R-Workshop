@@ -57,7 +57,7 @@ round(prop.table(Species.freq), 2)
 
 
 ################################################################################
-### EXERCISE 2: Looking at summary statistics                                ###
+### EXERCISE 2: Summary statistics                                           ###
 ################################################################################
 
 # By a large margin Redband trout was the most common species.
@@ -76,7 +76,7 @@ summary(Redband)
 
 # There are other descriptors in packages such as psych. This package will have to be installed.
 # You only have to do this step the first time! After you've installed, go ahead a comment this line out.
-install.packages("psych") 
+#install.packages("psych") 
 
 # But we need to load the package at the beginning of each work session.
 library(psych)
@@ -114,7 +114,8 @@ xlab="Percentage of total capture")
 
 
 ################################################################################
-### EXERCISE 4: More flexible exploratory graphing                           ###
+### EXERCISE 4: More flexible exploratory graphing with ggplot2              ###
+### Plus linear models!                                                      ###
 ################################################################################
 
 # The previous function barplot makes one type of plot (a barplot!).
@@ -178,56 +179,44 @@ summary(weightmodel2)
 
 # This quick and dirty look seems to support at the relationship between scale age and growth.
 
-# Let's next look at the relationship between fin length (quantitative) and scale age (qualitative).
+#But it could be confounded by a relationship between fin length (quantitative) and scale age (qualitative).
 # We'll start with a simple histogram. 
-hist(Redband$FinLength)
+qplot(Redband$FinLength)
 
-# Which we'll add some color to and adjust the bar widths.
-
-hist(Redband$FinLength, breaks=100, main="", col="Red")
-
-# Plot the histgram for redband weight. 
+# QUESTION: Why did qplot default to a histogram? 
 
 # The histogram of fin lengths suggests that there are at least 3 cohorts.  
-# Let's look at this as a function of scale age.
-# First we create a factor for scale age:
+# Let's look the length distribution within each age class.
+qplot(FinLength, data=Redband) + facet_wrap(~ScaleAge)
 
-scale.f <- factor(Redband$ScaleAge)      #Creates a factor of the scale ages
+# To me, it looks like ScaleAge might characterize these three different length cohorts:
+# 1) The little guys (ScaleAge = 0)
+# 2) The mid-little guys (ScaleAge = 1)
+# 3) All the bigger guys (ScaleAge = 2-7)
 
-# What does this factor look like?
-
-# Now we'll create a density plot based on this factor. The line width is increased (lwd=3)
-# to make it easier to see.
-
-sm.density.compare(Redband$FinLength, Redband$ScaleAge, lwd=3)
-
-# We can also show this as a whisker plot:
-
-plot(Redband$FinLength ~ scale.f) 
+# Lets plot the distribution of FinLength within each ScaleAge 
+qplot(as.factor(ScaleAge), FinLength, fill=ScaleAge, data=Redband, geom=c("boxplot"))  
 
 
 ################################################################################
-### EXERCISE 5: Testing for differences                                      ###
+### EXERCISE 5: Analysis of Variance                                         ###
 ################################################################################
 
 
 # Both density and whisker plots for fin length show some clear separation between some 
 # scale age classes and a degree of overlap for the older classes. We can examine this further with 
 # analysis of variance (ANOVA). The question is whether the means of the groups differ.
-
-
-aovout.fl = aov(Redband$FinLength ~ factor(Redband$ScaleAge))
-summary(aovout.fl)
+aovout = aov(Redband$FinLength ~ factor(Redband$ScaleAge))
+summary(aovout)
              
 # This shows us that there are significant differences among the 8 scale age groups.
 # Next we'll do a multiple comparisons test to see where the differences reside.
-
 TukeyHSD(aovout, conf.level = 0.95)
 
 # This test indicates that scale age groups 0, 1, 2, 3 and 4 are distinct. Groups 4 and 5 overlap
 # and there is substantial overlap amongst the later age groups. 
 
-# Does weight show the same pattern as fin length?
+# QUESTION: Does weight show the same pattern as fin length?
 
 ###################################################################################################
 

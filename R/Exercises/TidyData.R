@@ -63,9 +63,8 @@ gather(wtemp, site, temperature, calispell_temp:winchester_temp)
 ## at times it is extremely useful! Can you name a scenario in which you would want to convert 
 ## tidy data to this "wider" format?
 
-## Fortunately, tidyr includes a function to make it easy for us to 
+## Fortunately, tidyr includes a function to make it easy for us to spread
 
-## (unique observations )
 
 #########################################################
 ##2) Problem: Multiple variables are stored in one column
@@ -82,6 +81,8 @@ dat<-tbl_df(read.csv("LowSpokaneClean.csv")) %>%
          CapturedPITTagNo, ActivePITTagNo, AgeMethod)
 
 fishcatch<-dat
+
+
 fishcatch %>%
   separate(FishLength_Weight, c("Length", "Width"))
 

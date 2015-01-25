@@ -18,17 +18,9 @@ SpokaneFish <- read.csv(file="LowSpokaneClean.csv", header=TRUE, sep=',')
 # Fix dates
 SpokaneFish$Date <- as.Date(SpokaneFish$Date, "%m/%d/%Y")
 
-# Make it easier to see in the console
-# This is a function in the dplyr package, we'll spend a lot of time with that package later.
-# First we need to load dplyr.
-library(dplyr)
-
-# Then save our data in a "dataframe table" format, which makes it nicer to print.
-SpokaneFish <- tbl_df(SpokaneFish)
-
-# Print SpokaneFish to take a look:
-SpokaneFish
-
+# Have a look at the head and structure of SpokaneFish
+head(SpokaneFish)
+str(SpokaneFish)
 
 ################################################################################
 ### EXERCISE 1: Looking at frequencies                                       ###
@@ -115,19 +107,14 @@ xlab="Percentage of total capture")
 
 ################################################################################
 ### EXERCISE 4: More flexible exploratory graphing with ggplot2              ###
-### Plus linear models!                                                      ###
 ################################################################################
 
 # The previous function barplot makes one type of plot (a barplot!).
-# The ggplot2 package provides a "quick plot" option that can make many different types of graphs.
-# Unless you specify the type, it will guess based on your data inputs - this is handy for preliminary graphing.
+# The ggplot2 package provides a "quick plot" option that is very flexible.
+# Changing the arguments in qplot can create many different types of graphs.
 
 # First, load in the ggplot2 package.
 library(ggplot2)
-
-# "Guessing" which plot type to use works best when data are in a dataframe instead of a table,
-# because as we saw in the "LookingatData" module, dataframes have information on the type of data.
-# For example, integer and numeric columns are continuous variables; character and factor columns are categorical.
 
 # Let's revisit the Redband dataframe to look at the relationship between fin length and weight in Spokane River redband.
 # First, a simple scatterplot:
@@ -150,19 +137,10 @@ qplot(log(FinLength), log(Weight), data = Redband, geom=c("point", "smooth"),  m
 # Check that you are right:
 ?qplot
 
-# ?qplot highlights that there are a lot of different argument options.
-# One to always remember is specifying axis labels.
-# qplot (and the base function plot) will default to column headings, but sometimes we want to be more descriptive.
-qplot(log(FinLength), log(Weight), data = Redband, geom=c("point", "smooth"),  method="lm", 
-      formula=y~x, xlab="Log (Fin Length (mm))", ylab = "Log (Weight (g))")
 
-# The graph can be saved as an object, too.
-graph1 <- qplot(log(FinLength), log(Weight), data = Redband, geom=c("point", "smooth"),  
-           method="lm", 
-           formula=y~x, xlab="Log (Fin Length (mm))", ylab = "Log (Weight (g))")
-
-# Print it!
-print(graph1)
+################################################################################
+### EXERCISE 5: Linear models                                                ###
+################################################################################
 
 # Our preliminary graphing indicates a positive relationship between  log(fin length) and log(weight). 
 # We could think of this as a simple linear model.
@@ -178,8 +156,14 @@ weightmodel2 <- lm(Weight~FinLength + factor(ScaleAge), data=Redband)
 summary(weightmodel2)
 
 # This quick and dirty look seems to support at the relationship between scale age and growth.
+# But it could be confounded by a relationship between fin length (quantitative) and scale age (qualitative).
+# Relating a continuous response variable with a categorical (>2 categories) explanatory variable suggests ANOVA
 
-#But it could be confounded by a relationship between fin length (quantitative) and scale age (qualitative).
+
+################################################################################
+### EXERCISE 6: Analysis of Variance                                         ###
+################################################################################
+
 # We'll start with a simple histogram. 
 qplot(Redband$FinLength)
 
@@ -197,13 +181,7 @@ qplot(FinLength, data=Redband) + facet_wrap(~ScaleAge)
 # Lets plot the distribution of FinLength within each ScaleAge 
 qplot(as.factor(ScaleAge), FinLength, fill=ScaleAge, data=Redband, geom=c("boxplot"))  
 
-
-################################################################################
-### EXERCISE 5: Analysis of Variance                                         ###
-################################################################################
-
-
-# Both density and whisker plots for fin length show some clear separation between some 
+# Both density and boxplots plots for fin length show some clear separation between some 
 # scale age classes and a degree of overlap for the older classes. We can examine this further with 
 # analysis of variance (ANOVA). The question is whether the means of the groups differ.
 aovout = aov(Redband$FinLength ~ factor(Redband$ScaleAge))

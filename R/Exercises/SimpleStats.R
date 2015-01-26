@@ -14,6 +14,7 @@
 ################################################################################
 
 ## First we'll read in the data and get it ready to use.
+## Make sure your working directory is set to R-Workshop/Data!
 SpokaneFish <- read.csv(file="LowerSpokaneFish.csv", header=TRUE)
 # Fix dates
 SpokaneFish$Date <- as.Date(SpokaneFish$Date, "%m/%d/%Y")

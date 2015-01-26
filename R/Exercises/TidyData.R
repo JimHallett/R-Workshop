@@ -39,7 +39,7 @@ library(dplyr)
 ## We ignored it for the moment, but now is a good time to fix it.
 ## Remember the Calispell water temperature data? Let's look at it again. 
 ## If it isn't still in your workspace, load it this way:
-wtemp<-tbl_df(read.csv("Calispell Creek and Tributary Temperatures2.csv", stringsAsFactors=F))
+wtemp<-tbl_df(read.csv("CalispellCreekandTributaryTemperatures2.csv", stringsAsFactors=F))
 wtemp
 
 ## QUESTION: What is messy about this data?
@@ -83,7 +83,7 @@ wtemp_gathered %>%
 ## Let's revisit the Lower Spokane fish data
 ## I've added a some - but not all ;) - of the messiness for pedagogical purposes
 ## Let's read it in and convert it to a dataframe table:
-fishcatch<-read.csv("LittleSpokane_Messy.csv") %>%
+fishcatch<-read.csv("LowerSpokaneFish_Messy.csv") %>%
   tbl_df()
 
 ## Now have a look. Which column stores multiple variables?

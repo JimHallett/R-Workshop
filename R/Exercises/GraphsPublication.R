@@ -179,8 +179,7 @@ ggplot(Redband, aes(x=Length, y=Weight)) + geom_point(size=1, color="darkblue", 
 ggplot(Redband, aes(x=Length, y=Weight)) + geom_point() + facet_wrap(~ScaleAge)
 
 ## We could also make a grid by faceting one variable by another.
-ggplot(Redband, aes(x=Length, y=Weight)) + geom_point() + facet_grid(Year~ScaleAge)
-
+ggplot(Redband, aes(x=Length, y=Weight)) + geom_point() + facet_grid(Year~ScaleAge) 
 
 #########################################
 ## 5) Storing and exporting graphs

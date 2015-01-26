@@ -1,9 +1,11 @@
 ################################################################################
 ### R-WORKSHOP                                                               ###
-### EXERCISE 3: Simple statistics                                            ### 
+### MODULE 3: Simple statistics and exploratory graphing                     ### 
 ################################################################################
 
 ## OBJECTIVE: To explore some simple statistics and analyses.
+## We will generate summary statistics and exploratory graphics, 
+## and implement linear regression models and analysis of variance.
 
 ## We'll use some fish data from Chuck Lee at WDFW for the Lower Spokane River.
 
@@ -12,7 +14,6 @@
 ################################################################################
 
 ## First we'll read in the data and get it ready to use.
-
 SpokaneFish <- read.csv(file="LowerSpokaneFish.csv", header=TRUE)
 # Fix dates
 SpokaneFish$Date <- as.Date(SpokaneFish$Date, "%m/%d/%Y")
@@ -57,7 +58,7 @@ round(prop.table(Species.freq), 2)
 # First create a dataframe that only includes Redband trout.
 Redband <- SpokaneFish[ which(SpokaneFish$Species=='RB' & is.na(SpokaneFish$ScaleAge)==F), ]   #This is one of several ways to subset data
 
-# Descriptive statistics are useful for understanding data. The redband data include weights and fin lengths.
+# Descriptive statistics are useful for understanding data. The redband data include weights and lengths.
 # We'll look at these 2 variables. The built in function summary is useful.
 summary(Redband$Length)
 summary(Redband$Weight)
@@ -83,7 +84,7 @@ describe(Redband$Weight)
 ### EXERCISE 3: Exploratory graphing                                         ###
 ################################################################################
 
-# We also gain a lot of understanding by graphing our data. 
+# We gain a lot of understanding by graphing our data. 
 # We'll start with some quick and simple plots. 
 
 # We created several tables above, but now we'll save the species frequency table 
@@ -115,13 +116,13 @@ xlab="Percentage of total capture")
 # First, load in the ggplot2 package.
 library(ggplot2)
 
-# Let's revisit the Redband dataframe to look at the relationship between fin length and weight in Spokane River redband.
+# Let's revisit the Redband dataframe to look at the relationship between length and weight in Spokane River redband.
 # First, a simple scatterplot:
 qplot(Length, Weight, data = Redband) 
 
-# Note that we can also identify the dataset by using Redband$FinLength, etc. 
+# Note that we can also identify the dataset by using Redband$Length, etc. 
 
-# This scatterplot shows a curvilinear relationship between weight and fin length. 
+# This scatterplot shows a curvilinear relationship between weight and  length. 
 # We can deal with this in several ways, but here we apply a log transformation to the data.
 qplot(log(Length), log(Weight), data = Redband)
 
@@ -141,22 +142,30 @@ qplot(log(Length), log(Weight), data = Redband, geom=c("point", "smooth"),  meth
 ### EXERCISE 5: Linear models                                                ###
 ################################################################################
 
-# Our preliminary graphing indicates a positive relationship between  log(fin length) and log(weight). 
+# Our preliminary graphing indicates a positive relationship between log(length) and log(weight). 
 # We could think of this as a simple linear model.
 weightmodel1 <- lm(Weight~Length, data=Redband)
 summary(weightmodel1)
 
+## QUESTION: In weightmodel1, what is the explanatory variable? And what is the response variable?
+## QUESTION: What proportion of the variance in weight is explained by length?
+
 # What if that's not the whole story? Sometimes weight is a factor of both length and age.
-# Let's first visualize how fine weight and legnth relate as a fuction of scale age.
+# Let's first visualize how  weight and legnth relate as a fuction of scale age.
 qplot(log(Length), log(Weight), data = Redband, color=factor(ScaleAge))
 
 # We could think of this as a multiple regression model with one continuous and one categorical variable.
 weightmodel2 <- lm(Weight~Length + factor(ScaleAge), data=Redband)
 summary(weightmodel2)
 
-# This quick and dirty look seems to support at the relationship between scale age and growth.
-# But it could be confounded by a relationship between fin length (quantitative) and scale age (qualitative).
-# Relating a continuous response variable with a categorical (>2 categories) explanatory variable suggests ANOVA
+## We can compare the these models using the anova function:
+anova(weightmodel1, weightmodel2)
+
+## QUESTION: Do the models significantly differ in the variance explained?
+
+# This quick and dirty suggests that weight is explained by both scale age and length.
+# But what if length is strongly associated with scale age as well? 
+# Relating a continuous response variable with a categorical (>2 categories) explanatory variable suggests ANOVA.
 
 
 ################################################################################
@@ -168,19 +177,19 @@ qplot(Redband$Length)
 
 # QUESTION: Why did qplot default to a histogram? 
 
-# The histogram of fin lengths suggests that there are at least 3 cohorts.  
+# The histogram of length suggests that there are at least 3 cohorts.  
 # Let's look the length distribution within each age class.
 qplot(Length, data=Redband) + facet_wrap(~ScaleAge)
 
-# To me, it looks like ScaleAge might characterize these three different length cohorts:
-# 1) The little guys (ScaleAge = 0)
-# 2) The mid-little guys (ScaleAge = 1)
-# 3) All the bigger guys (ScaleAge = 2-7)
+# To me, it looks like ScaleAge might characterize these three different Length cohorts:
+# 1) The short fish (ScaleAge = 0)
+# 2) The mid-short fish (ScaleAge = 1)
+# 3) All the longer fish (ScaleAge = 2-7)
 
-# Lets plot the distribution of FinLength within each ScaleAge 
+# Lets plot the distribution of Length within each ScaleAge 
 qplot(as.factor(ScaleAge), Length, fill=ScaleAge, data=Redband, geom=c("boxplot"))  
 
-# Both density and boxplots plots for fin length show some clear separation between some 
+# Both density and boxplots plots for length show some clear separation between some 
 # scale age classes and a degree of overlap for the older classes. We can examine this further with 
 # analysis of variance (ANOVA). The question is whether the means of the groups differ.
 aovout = aov(Redband$Length ~ factor(Redband$ScaleAge))
@@ -193,7 +202,7 @@ TukeyHSD(aovout, conf.level = 0.95)
 # This test indicates that scale age groups 0, 1, 2, 3 and 4 are distinct. Groups 4 and 5 overlap
 # and there is substantial overlap amongst the later age groups. 
 
-# QUESTION: Does weight show the same pattern as fin length?
+# QUESTION: Does weight show the same pattern as length?
 
 ###################################################################################################
 

@@ -1,6 +1,6 @@
 ################################################################################
 ### R-WORKSHOP                                                               ###
-### EXERCISE 1: Basic building blocks                                        ### 
+### MODULE 1: Basic building blocks                                          ### 
 ################################################################################
 
 ## OBJECTIVE:
@@ -49,6 +49,8 @@ Sum(2, 3)
 # The above command should give you an error. This is because R distinguishes 
 # lower case from UPPER case. The function 'sum' is not the same 
 # as 'Sum', and in this case 'Sum' does not exist.
+# You can view the source code of sum by typing just the function name into the console.
+sum
 
 ## In addition to the common arithmetic operators +, -, / and ^, other useful operators are
 ## mean() for the mean, sqrt() to take the square root, and abs() for the absolute value

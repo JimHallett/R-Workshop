@@ -26,8 +26,8 @@ Quick-R was our go-to stop when we began learning R, and is still the first stop
 **Cookbook for R**                                http://www.cookbook-r.com/
 Has a goal of providing solutions to common tasks and problems in analyzing data. I often find my solution here after googling an issue.
 
-**Swirl**                                          http://swirlstats.com/ 
-Swirl's motto is "Learn R, in R". It is a package that walks you through different lessons. Modules include R Programming, Data Analysis, Getting and and Cleaning Data, Regression Models and Statistical Inference. It is actively being developed, so keep checking in for new lessons!
+**swirl**                                          http://swirlstats.com/ 
+swirl's motto is "Learn R, in R". It is a package that walks you through different lessons. Modules include R Programming, Data Analysis, Getting and and Cleaning Data, Regression Models and Statistical Inference. It is actively being developed, so keep checking in for new lessons!
 
 **The R Manuals at CRAN**                          http://cran.r-project.org/manuals.html
 Detailed walk-through on basics of R and data import/export.

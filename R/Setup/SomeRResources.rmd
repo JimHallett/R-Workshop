@@ -11,7 +11,7 @@ Because R is an open source project, there are a lot of R enthusiasts out there 
 ## Getting help within R
 - To access the help for any function in R, type a question mark followed by the function name. For example, to get help with `sum` type `?sum`
 
-- Within RStudio, you can see all the help files for a given package by clicking on the "package" tab and then clicking the hyper-linked package name.
+- Within RStudio, you can see all the help files for a given package by clicking on the "package" tab in the lower right panel and then clicking the hyper-linked package name.
 
 - Another great way to learn R is to look at the source code. You can view the source code for any function by typing the function name into the R console. 
 
@@ -54,7 +54,7 @@ A question and answer site for programmers. Often if you have a problem other pe
 **R-project listservs**                     http://www.r-project.org/mail.html
 Mailing lists for different R topics. The archives are great to search.
 
-###Cheat sheets
+###Cheat sheets 
 
 - R Ref Card                            http://cran.r-project.org/doc/contrib/Baggott-refcard-v2.pdf
 - tidyr and dplyr Cheat Sheet           http://www.rstudio.com/wp-content/uploads/2015/01/data-wrangling-cheatsheet.pdf

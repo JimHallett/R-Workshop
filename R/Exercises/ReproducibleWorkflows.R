@@ -12,11 +12,11 @@
 ##1) Reading in the data
 ########################
 
-## We will focus on a water temperature dataset. These type of data are ripe for 
-## for scripted analysis because their formats remain constant but graphs frequently
-## need to be updated to reflect new data.
+## We will use a dataset of water temperature in Calispell Creek and its tributories provided by  Dan McMeekan. 
+## These type of data are ripe for for scripted analysis because their formats remain constant 
+## but graphs frequently need to be updated to reflect new data.
 
-rawdat<-read.csv("Calispell Creek and Tributary Temperatures.csv", stringsAsFactors=FALSE)
+rawdat<-read.csv("CalispellCreekandTributaryTemperatures.csv", stringsAsFactors=FALSE)
 
 ## Oops, we got an error! 
 ## QUESTION: Why?
@@ -34,7 +34,7 @@ rawdat<-read.csv("Calispell Creek and Tributary Temperatures.csv", stringsAsFact
 ## for example by a temperature logger. That's what we'll do here.
 
 ## Let's try again:
-rawdat<-read.csv("Calispell Creek and Tributary Temperatures.csv", header=FALSE, stringsAsFactors=FALSE)
+rawdat<-read.csv("CalispellCreekandTributaryTemperatures.csv", header=FALSE, stringsAsFactors=FALSE)
 
 ## QUESTION: What does stringsAsFactors mean? Why would we want to make it false?
 
@@ -75,7 +75,7 @@ mydat$winchester_temp<-as.numeric(mydat$winchester_temp)
 
 ## To illustrate why it would be easier to have cleaner column headings to begin with
 ## Here's the same data but saved with our new column names
-mydat2<-read.csv("Calispell Creek and Tributary Temperatures2.csv", stringsAsFactors=F)
+mydat2<-read.csv("CalispellCreekandTributaryTemperatures2.csv", stringsAsFactors=F)
 
 ## What data type does R assign to each column of mydat2?
 ## Why is this different than rawdat?

@@ -1,6 +1,6 @@
 ################################################################################
 ### R-WORKSHOP                                                               ###
-### EXERCISE 4: Graphs for publication                                       ### 
+### MODULE 4: Graphs for publication                                         ### 
 ################################################################################
 
 ## OBJECTIVES:
@@ -30,14 +30,17 @@
 ## when we overlayed a scatterplot with a smoothed line.
 
 ## Thus, a layered grammar of graphics builds a plot this way:
-    ## A default dataset and set of mappings from variables to aesthetics
+    ## A default dataset and set of mappings from variables to aesthetics.
     ## One or more layers. Each layer includes have one geometric object, one statistical transformation,
-        ## one position adjustment, and one dataset and set of aesthetic mappings
-    ## One scale for each aesthetic mapping
-    ## A coordinate system (ie, Cartesian, Polar, etc)
-    ## The facet specification
+        ## one position adjustment, and one dataset and set of aesthetic mappings.
+    ## One scale for each aesthetic mapping.
+    ## A coordinate system (ie, Cartesian, Polar, etc).
+    ## The facet specification.
 
+## First let's load ggplot2
+library(ggplot2)
 
+## Make sure your working directory is set to R-Workshop/Data!
 SpokaneFish <- read.csv(file="LowerSpokaneFish.csv", header=TRUE)
 # Fix dates
 SpokaneFish$Date <- as.Date(SpokaneFish$Date, "%m/%d/%Y")
@@ -123,7 +126,6 @@ ggplot(Redband2, aes(x=as.factor(ScaleAge), y=meanWeight, fill=as.factor(Pass)))
 
 ## I don't like the stacked graphs that much! I'd much rather have each pass side by side, 
 ## within the ScaleAge category. We can specify the position within geom_bar()
-
 ggplot(Redband2, aes(x=as.factor(ScaleAge), y=meanWeight, fill=as.factor(Pass))) +
   geom_bar(stat="identity", position="dodge")
 
@@ -188,14 +190,14 @@ ggplot(Redband, aes(x=Length, y=Weight)) + geom_point() + facet_grid(Year~ScaleA
 ## Once we have a graph we love, we need to export it at a publication-quality resolution.
 ## I think this is a lovable graph, so I'm saving it as "RB_LengthWidth".
 
-## Note that ggplot2 includes default color themes (here I changed to the default black and white theme)
+## Note that ggplot2 includes default color themes (here I changed to the default a classic theme)
 ## The overrode default text size settings to make the text bigger
 
 RB_LengthWidth <- ggplot(Redband, aes(x=Length, y=Weight)) + geom_point(size=2, color="black", shape=1) +
   geom_smooth() + 
   scale_x_log10() + scale_y_log10() +
   xlab("Redband trout length (mm)") + ylab("Redband trought weight (g)") + 
-  theme_bw() + 
+  theme_classic() + 
   theme(text = element_text(size=20))
 
 ## Let's look at it:

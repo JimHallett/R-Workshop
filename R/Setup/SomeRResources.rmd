@@ -24,7 +24,7 @@ Because R is an open source project, there are a lot of R enthusiasts out there 
 Quick-R was our go-to stop when we began learning R, and is still the first stop whenever we need a refresher. It's well-organized with sections on the R Interface, Data Input and Management, Basic and Advanced Stats and Basic and Advanced Graphs.  
 
 **Cookbook for R**                                http://www.cookbook-r.com/
-Has a goal of providing solutions to common tasks and problems in analyzing data. I often find my solution here after googling an issue.
+Has a goal of providing solutions to common tasks and problems in analyzing data. We often find the solution here after googling an issue.
 
 **swirl**                                          http://swirlstats.com/ 
 swirl's motto is "Learn R, in R". It is a package that walks you through different lessons. Modules include R Programming, Data Analysis, Getting and and Cleaning Data, Regression Models and Statistical Inference. It is actively being developed, so keep checking in for new lessons!
@@ -42,11 +42,11 @@ Everything Hadley Wickham does is amazing! True to form, this is a fabulous reso
 Easily-to-navigate help on ggplot2, with tons of examples.
 
 **R Programming.net**                              http://rprogramming.net/
-Includes a lot of bite-sized "how-tos" and has a great link list.
+Includes a lot of bite-sized "how-tos" and has a good link list.
 
 ###Search engines and community sites
 **R-Seek**                                        http://www.rseek.org/
-Restricts a google-search to just R-related material. This is especially great when you're searching for help on a function whose name is common English! Compare an rseek vs google search on "aggregate".
+Restricts a google-search to just R-related material. This is especially great when you're searching for help on a function whose name is common English. Compare an rseek vs google search on "aggregate".
 
 **Stack Overflow**                              http://stackoverflow.com/
 A question and answer site for programmers. Often if you have a problem other people had it too - this is a great place to look and see if they had it answered. If you have had a good look here and in other resources and can't find your solution, go ahead and ask. Be sure to give a "reproducible" example so that others can recreate your problem to help find the solution.

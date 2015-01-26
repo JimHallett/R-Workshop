@@ -1,6 +1,6 @@
 ################################################################################
 ### R-WORKSHOP                                                               ###
-### EXERCISE 5: Developing reproducible workflows                            ### 
+### MODULE 5: Developing reproducible workflows                              ### 
 ################################################################################
 
 ## OBJECTIVES:
@@ -272,21 +272,24 @@ wtemp_by_monthyear<-group_by(wtemp2, month, year)
 summarize(wtemp_by_monthyear, avg_temp_calispell= mean(calispell_temp, na.rm=TRUE))
 
 ## Let's take this a step further, and look at the mean and standard error.
-## First, run this code to store a function that calculate SE
+## First, run this code to store a function that calculates SE
 calcSE<-function(x){
   x<-x[is.na(x)==F]
   sd(x)/sqrt(length(x))
 }
 
-## Then, let's summarize calispell both by mean and se and store it as a new dataframe:
+## Then, let's summarize Calispell Creek temperatures both by mean and se and store it as a new dataframe:
 wtemp_calispell_summary<- summarize(wtemp_by_monthyear, avg_temp_calispell= mean(calispell_temp, na.rm=TRUE),  
           se_temp_calispell= calcSE(calispell_temp))
 
 ## Notice how this gets our data into great shape for plotting. Just for fun, let's plot mean temp by month and include se
 library(ggplot2)
-ggplot(wtemp_calispell_summary, aes(x=month, y=avg_temp_calispell)) +geom_bar(stat="identity", fill="grey") + 
+ggplot(wtemp_calispell_summary, aes(x=month, y=avg_temp_calispell)) +
+  geom_bar(stat="identity", fill="grey") + 
   geom_errorbar(aes(ymax=avg_temp_calispell+se_temp_calispell, ymin=avg_temp_calispell-se_temp_calispell), width=.1) + 
-  theme_bw() + xlab("Month") + ylab("Mean temperature at Calispell Creek (degrees C)") + facet_wrap(~year) 
+  theme_bw() + 
+  xlab("Month") + ylab("Mean temperature at Calispell Creek (degrees C)") + 
+  facet_wrap(~year) 
 
 
 ## One last note on group_by: If you group a dataframe table and then create a new variable with mutate, the value for that variable 
@@ -324,14 +327,16 @@ Calispell_monthtemp <-wtemp %>%
   group_by(month, year) %>%
   summarize(avg_temp_calispell= mean(calispell_temp),  
             se_temp_calispell= calcSE(calispell_temp)) %>%
-  ggplot(aes(x=month, y=avg_temp_calispell)) +geom_bar(stat="identity", fill="grey") + 
+  ggplot(aes(x=month, y=avg_temp_calispell)) + 
+  geom_bar(stat="identity", fill="grey") + 
     geom_errorbar(aes(ymax=avg_temp_calispell+se_temp_calispell, ymin=avg_temp_calispell-se_temp_calispell), width=.1) + 
-    theme_bw() + xlab("Month") + ylab("Mean temperature at Calispell Creek (degrees C)") + facet_wrap(~year) 
+    theme_bw() + 
+    xlab("Month") + ylab("Mean temperature at Calispell Creek (degrees C)") +
+    facet_wrap(~year) 
 
 ##  Nice!! Let's look at what we created:
 Calispell_monthtemp
 
 ## QUESTION: Where is (are) the dataset specified in the pipeline?
 
-## For the next module we will continue to work with this pipeline structure to get lots of practice with it!
 

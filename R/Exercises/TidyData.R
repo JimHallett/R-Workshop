@@ -1,6 +1,6 @@
 ################################################################################
 ### R-WORKSHOP                                                               ###
-### EXERCISE 6: Tidying Data                                                 ### 
+### MODULE 6: Tidying Data                                                   ### 
 ################################################################################
 
 ## OBJECTIVES:
@@ -230,6 +230,15 @@ tog<-rbind(pass1, pass2) %>%
 ## QUESTION: This type of messiness often happens when data are collected at different points of time.
 ## Can you think of a reason why the fix might not always be so easy?
 
+## SAVING A CLEAN DATAFRAME
+## In the graphics module we discussed how to save images 
+## But what if we went to save processed data as a new .csv?
+## Instead of "read.csv" we use "write.csv"
+## For example, to save the fishdat dataframe as a .csv file
+## called "LowerSpokaneFishCatch.csv" uncomment out this code:
+# write.csv(fishdat, "LowerSpokaneFishCatch.csv")
 
+##As always, for help check 
+?write.csv
 
 
